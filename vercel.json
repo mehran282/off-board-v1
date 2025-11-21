@@ -6,7 +6,8 @@
   "outputDirectory": ".next",
   "regions": ["iad1"],
   "env": {
-    "PRISMA_GENERATE_DATAPROXY": "false"
+    "PRISMA_GENERATE_DATAPROXY": "false",
+    "DATABASE_URL": "postgresql://neondb_owner:npg_Gbf8m4PKYnFp@ep-cool-wildflower-agerpwqm-pooler.c-2.eu-central-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require"
   }
 }
 
