@@ -1,0 +1,125 @@
+{
+  "common": {
+    "home": "Home",
+    "flyers": "Flyers",
+    "offers": "Offers",
+    "retailers": "Retailers",
+    "search": "Search",
+    "back": "Back",
+    "showAll": "Show All",
+    "details": "View Details",
+    "page": "Page",
+    "of": "of",
+    "next": "Next",
+    "previous": "Previous",
+    "noResults": "No results found",
+    "tryOtherFilters": "Please try other filters",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "goHome": "Go to Home",
+    "installApp": "Install App",
+    "installAppAriaLabel": "Install app"
+  },
+  "pwa": {
+    "installInstructionsIOS": "Please tap the share icon (□↑) and select \"Add to Home Screen\"",
+    "installInstructionsAndroidChrome": "Please tap the menu (⋮) in the top right and select \"Add to Home Screen\" or \"Install App\"",
+    "installInstructionsAndroidOther": "Please use your browser menu and select \"Add to Home Screen\"",
+    "installInstructionsDesktopChrome": "Please click the install icon (⊕) in the address bar or use the menu (⋮) > \"Install App\"",
+    "installInstructionsDesktopEdge": "Please click the install icon (⊕) in the address bar or use the menu (⋯) > \"Apps\" > \"Install this website as an app\"",
+    "installInstructionsDesktopFirefox": "Please use the menu (☰) > \"This Page\" > \"Add to Home Screen\"",
+    "installInstructionsDesktopOther": "Please use your browser menu and look for \"Install App\" or \"Add to Home Screen\""
+  },
+  "home": {
+    "title": "Find the Best Offers",
+    "subtitle": "Discover current flyers and offers from retailers near you",
+    "searchPlaceholder": "Search for products, brands or offers...",
+    "recentFlyers": "Recent Flyers",
+    "topOffers": "Top Offers",
+    "noData": "No data available yet. Please run a scraping operation first."
+  },
+  "flyers": {
+    "title": "Flyers",
+    "description": "Browse all available flyers from various retailers",
+    "validFrom": "Valid from",
+    "validUntil": "Valid until",
+    "pages": "Pages",
+    "offersCount": "Offers",
+    "backToFlyers": "Back to Flyers",
+    "offersInFlyer": "Offers",
+    "openPdf": "Open PDF",
+    "noFlyers": "No flyers found. Please try other filters.",
+    "pageInfo": "Page {current} of {total}",
+    "notFound": "Flyer not found",
+    "from": "from"
+  },
+  "offers": {
+    "title": "Offers",
+    "description": "Discover the best offers and discounts from various retailers",
+    "currentPrice": "Current Price",
+    "oldPrice": "Original Price",
+    "discount": "Discount",
+    "validUntil": "Valid until",
+    "unitPrice": "Unit Price",
+    "fromFlyer": "From Flyer",
+    "viewOffer": "View Offer",
+    "backToOffers": "Back to Offers",
+    "noImage": "No image available",
+    "noOffers": "No offers found. Please try other filters.",
+    "pageInfo": "Page {current} of {total}",
+    "notFound": "Offer not found",
+    "from": "from"
+  },
+  "retailers": {
+    "title": "Retailers",
+    "description": "Browse all available retailers and their offers",
+    "flyers": "Flyers",
+    "offers": "Offers",
+    "stores": "Stores",
+    "backToRetailers": "Back to Retailers",
+    "storeLocations": "Store Locations",
+    "phone": "Phone",
+    "noRetailers": "No retailers found. Please try a different search.",
+    "notFound": "Retailer not found",
+    "with": "with",
+    "and": "and"
+  },
+  "search": {
+    "title": "Search Results",
+    "description": "Search for offers and products",
+    "results": "results",
+    "result": "result",
+    "for": "for",
+    "noResults": "No results for",
+    "found": "found",
+    "enterSearchTerm": "Please enter a search term"
+  },
+  "filters": {
+    "title": "Filters",
+    "reset": "Reset",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "retailer": "Retailer",
+    "allRetailers": "All Retailers",
+    "minDiscount": "Minimum Discount (%)",
+    "noMinimum": "No Minimum",
+    "orMore": "or more"
+  },
+  "errors": {
+    "notFound": "Page Not Found",
+    "notFoundDescription": "The requested page could not be found.",
+    "errorOccurred": "Something went wrong",
+    "unexpectedError": "An unexpected error occurred.",
+    "tryAgain": "Try Again",
+    "goHome": "Go to Home"
+  },
+  "footer": {
+    "about": "About off-board",
+    "aboutDescription": "Find the best offers and flyers from retailers near you.",
+    "navigation": "Navigation",
+    "contact": "Contact",
+    "contactDescription": "For questions and suggestions, please contact us.",
+    "rights": "All rights reserved."
+  }
+}
+

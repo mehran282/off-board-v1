@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# off-board Frontend
+
+Frontend application for displaying catalogs and discounts from kaufDA.de scraper (off-board project).
+
+## Tech Stack
+
+- **Next.js 16** - React framework with App Router
+- **TypeScript** - Type safety
+- **Tailwind CSS v4** - Styling
+- **shadcn/ui** - UI components
+- **Prisma** - Database ORM
+- **PostgreSQL (Neon)** - Database
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- PostgreSQL database (Neon)
+
+### Installation
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Set up environment variables:
+
+Create a `.env` file in the root directory:
+
+```env
+DATABASE_URL="postgresql://user:password@host:5432/database?sslmode=require"
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+3. Generate Prisma Client:
+
+```bash
+npx prisma generate
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+frontend/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   ├── flyers/            # Flyer pages
+│   ├── offers/            # Offer pages
+│   ├── retailers/         # Retailer pages
+│   ├── search/            # Search page
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page
+│   ├── error.tsx          # Error boundary
+│   ├── loading.tsx        # Loading state
+│   └── not-found.tsx      # 404 page
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   ├── flyer-card.tsx    # Flyer card component
+│   ├── offer-card.tsx    # Offer card component
+│   ├── retailer-card.tsx # Retailer card component
+│   ├── search-bar.tsx    # Search bar component
+│   ├── filter-panel.tsx  # Filter panel component
+│   ├── header.tsx        # Header component
+│   └── footer.tsx        # Footer component
+├── lib/                  # Utilities
+│   ├── db.ts             # Prisma client
+│   └── utils.ts          # Utility functions
+└── prisma/               # Prisma schema
+    └── schema.prisma     # Database schema
+```
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- 🏠 **Home Page** - Display recent flyers and top offers
+- 📄 **Flyers** - Browse and filter flyers by retailer
+- 🏷️ **Offers** - Browse and filter offers with advanced filters
+- 🏪 **Retailers** - Browse all retailers
+- 🔍 **Search** - Search for products, brands, and categories
+- 📱 **Responsive Design** - Mobile-friendly interface
+- ⚡ **Server Components** - Optimized performance with Next.js
+- 🎨 **Modern UI** - Beautiful interface with Tailwind CSS and shadcn/ui
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `GET /api/flyers` - List flyers with pagination
+- `GET /api/flyers/[id]` - Get flyer details
+- `GET /api/offers` - List offers with filters
+- `GET /api/offers/[id]` - Get offer details
+- `GET /api/retailers` - List retailers
+- `GET /api/categories` - List categories
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Database
+
+The application uses Prisma ORM with PostgreSQL (Neon). Make sure the database schema is up to date:
+
+```bash
+npx prisma generate
+```
+
+## Deployment
+
+1. Build the application:
+
+```bash
+npm run build
+```
+
+2. Set environment variables in your hosting platform
+3. Deploy to Vercel, Netlify, or your preferred platform
+
+## License
+
+MIT

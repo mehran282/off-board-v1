@@ -1,0 +1,125 @@
+{
+  "common": {
+    "home": "Startseite",
+    "flyers": "Prospekte",
+    "offers": "Angebote",
+    "retailers": "Händler",
+    "search": "Suchen",
+    "back": "Zurück",
+    "showAll": "Alle anzeigen",
+    "details": "Details anzeigen",
+    "page": "Seite",
+    "of": "von",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "noResults": "Keine Ergebnisse gefunden",
+    "tryOtherFilters": "Bitte versuchen Sie andere Filter",
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "retry": "Erneut versuchen",
+    "goHome": "Zur Startseite",
+    "installApp": "App installieren",
+    "installAppAriaLabel": "App installieren"
+  },
+  "pwa": {
+    "installInstructionsIOS": "Bitte tippen Sie auf das Teilen-Symbol (□↑) und wählen Sie \"Zum Home-Bildschirm hinzufügen\"",
+    "installInstructionsAndroidChrome": "Bitte tippen Sie auf das Menü (⋮) oben rechts und wählen Sie \"Zur Startseite hinzufügen\" oder \"App installieren\"",
+    "installInstructionsAndroidOther": "Bitte verwenden Sie das Menü Ihres Browsers und wählen Sie \"Zur Startseite hinzufügen\"",
+    "installInstructionsDesktopChrome": "Bitte klicken Sie auf das Install-Symbol (⊕) in der Adressleiste oder verwenden Sie das Menü (⋮) > \"App installieren\"",
+    "installInstructionsDesktopEdge": "Bitte klicken Sie auf das Install-Symbol (⊕) in der Adressleiste oder verwenden Sie das Menü (⋯) > \"Apps\" > \"Diese Website als App installieren\"",
+    "installInstructionsDesktopFirefox": "Bitte verwenden Sie das Menü (☰) > \"Diese Seite\" > \"Zur Startseite hinzufügen\"",
+    "installInstructionsDesktopOther": "Bitte verwenden Sie das Menü Ihres Browsers und suchen Sie nach \"App installieren\" oder \"Zur Startseite hinzufügen\""
+  },
+  "home": {
+    "title": "Finden Sie die besten Angebote",
+    "subtitle": "Entdecken Sie aktuelle Prospekte und Angebote von Händlern in Ihrer Nähe",
+    "searchPlaceholder": "Nach Produkten, Marken oder Angeboten suchen...",
+    "recentFlyers": "Neueste Prospekte",
+    "topOffers": "Top Angebote",
+    "noData": "Noch keine Daten vorhanden. Bitte führen Sie zuerst einen Scraping-Vorgang durch."
+  },
+  "flyers": {
+    "title": "Prospekte",
+    "description": "Durchsuchen Sie alle verfügbaren Prospekte von verschiedenen Händlern",
+    "validFrom": "Gültig von",
+    "validUntil": "Gültig bis",
+    "pages": "Seiten",
+    "offersCount": "Angebote",
+    "backToFlyers": "Zurück zu Prospekten",
+    "offersInFlyer": "Angebote",
+    "openPdf": "PDF öffnen",
+    "noFlyers": "Keine Prospekte gefunden. Bitte versuchen Sie andere Filter.",
+    "pageInfo": "Seite {current} von {total}",
+    "notFound": "Prospekt nicht gefunden",
+    "from": "von"
+  },
+  "offers": {
+    "title": "Angebote",
+    "description": "Entdecken Sie die besten Angebote und Rabatte von verschiedenen Händlern",
+    "currentPrice": "Aktueller Preis",
+    "oldPrice": "Ursprünglicher Preis",
+    "discount": "Rabatt",
+    "validUntil": "Gültig bis",
+    "unitPrice": "Einheitspreis",
+    "fromFlyer": "Aus Prospekt",
+    "viewOffer": "Angebot ansehen",
+    "backToOffers": "Zurück zu Angeboten",
+    "noImage": "Kein Bild verfügbar",
+    "noOffers": "Keine Angebote gefunden. Bitte versuchen Sie andere Filter.",
+    "pageInfo": "Seite {current} von {total}",
+    "notFound": "Angebot nicht gefunden",
+    "from": "von"
+  },
+  "retailers": {
+    "title": "Händler",
+    "description": "Durchsuchen Sie alle verfügbaren Händler und ihre Angebote",
+    "flyers": "Prospekte",
+    "offers": "Angebote",
+    "stores": "Filialen",
+    "backToRetailers": "Zurück zu Händlern",
+    "storeLocations": "Filialen",
+    "phone": "Tel",
+    "noRetailers": "Keine Händler gefunden. Bitte versuchen Sie eine andere Suche.",
+    "notFound": "Händler nicht gefunden",
+    "with": "mit",
+    "and": "und"
+  },
+  "search": {
+    "title": "Suchergebnisse",
+    "description": "Suchen Sie nach Angeboten und Produkten",
+    "results": "Ergebnisse",
+    "result": "Ergebnis",
+    "for": "für",
+    "noResults": "Keine Ergebnisse für",
+    "found": "gefunden",
+    "enterSearchTerm": "Bitte geben Sie einen Suchbegriff ein"
+  },
+  "filters": {
+    "title": "Filter",
+    "reset": "Zurücksetzen",
+    "category": "Kategorie",
+    "allCategories": "Alle Kategorien",
+    "retailer": "Händler",
+    "allRetailers": "Alle Händler",
+    "minDiscount": "Mindestrabatt (%)",
+    "noMinimum": "Kein Minimum",
+    "orMore": "oder mehr"
+  },
+  "errors": {
+    "notFound": "Seite nicht gefunden",
+    "notFoundDescription": "Die angeforderte Seite konnte nicht gefunden werden.",
+    "errorOccurred": "Etwas ist schief gelaufen",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+    "tryAgain": "Erneut versuchen",
+    "goHome": "Zur Startseite"
+  },
+  "footer": {
+    "about": "Über off-board",
+    "aboutDescription": "Finden Sie die besten Angebote und Prospekte von Händlern in Ihrer Nähe.",
+    "navigation": "Navigation",
+    "contact": "Kontakt",
+    "contactDescription": "Für Fragen und Anregungen kontaktieren Sie uns bitte.",
+    "rights": "Alle Rechte vorbehalten."
+  }
+}
+
