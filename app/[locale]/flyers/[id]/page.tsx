@@ -144,7 +144,21 @@ export default async function FlyerDetailPage({ params }: FlyerDetailPageProps) 
               {t('offersInFlyer')} ({flyer.offers.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {flyer.offers.map((offer) => (
+              {flyer.offers.map((offer: {
+                id: string;
+                productName: string;
+                brand: string | null;
+                currentPrice: number;
+                oldPrice: number | null;
+                discountPercentage: number | null;
+                imageUrl: string | null;
+                retailer: {
+                  id: string;
+                  name: string;
+                  logoUrl: string | null;
+                };
+                validUntil: Date | null;
+              }) => (
                 <OfferCard
                   key={offer.id}
                   id={offer.id}
