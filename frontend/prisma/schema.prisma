@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Retailer {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String
+  logoUrl   String?
+  scrapedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  flyers Flyer[]
+  stores Store[]
+  offers Offer[]
+
+  @@index([name])
+  @@index([category])
+}
+
+model Flyer {
+  id           String    @id @default(cuid())
+  retailerId   String
+  title        String
+  pages        Int
+  validFrom    DateTime
+  validUntil   DateTime
+  url          String    @unique
+  pdfUrl       String?
+  thumbnailUrl String?
+  scrapedAt    DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  retailer Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+  offers   Offer[]
+
+  @@index([retailerId])
+  @@index([validFrom])
+  @@index([validUntil])
+  @@index([url])
+}
+
+model Store {
+  id           String    @id @default(cuid())
+  retailerId   String
+  address      String
+  city         String
+  postalCode   String
+  latitude     Float?
+  longitude    Float?
+  phone        String?
+  openingHours String?   // JSON string
+  scrapedAt    DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  retailer Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+
+  @@unique([retailerId, address])
+  @@index([retailerId])
+  @@index([city])
+  @@index([postalCode])
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  brand       String?
+  category    String?
+  description String?
+  imageUrl    String?
+  scrapedAt   DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  offers Offer[]
+
+  @@index([name])
+  @@index([brand])
+  @@index([category])
+}
+
+model Offer {
+  id                String    @id @default(cuid())
+  flyerId           String?
+  productId         String?
+  retailerId        String
+  productName        String
+  brand             String?
+  category          String?
+  currentPrice      Float
+  oldPrice          Float?
+  discount          Float?
+  discountPercentage Float?
+  unitPrice         String?
+  url               String    @unique
+  imageUrl          String?
+  validUntil        DateTime?
+  scrapedAt         DateTime  @default(now())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  flyer    Flyer?    @relation(fields: [flyerId], references: [id], onDelete: SetNull)
+  product  Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  retailer Retailer  @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+
+  @@index([flyerId])
+  @@index([productId])
+  @@index([retailerId])
+  @@index([productName])
+  @@index([currentPrice])
+  @@index([validUntil])
+  @@index([url])
+}
+
+model ScrapingLog {
+  id           String    @id @default(cuid())
+  type         String    // 'flyers' | 'offers' | 'retailers' | 'products' | 'all'
+  status       String    // 'pending' | 'running' | 'completed' | 'failed' | 'cancelled'
+  startedAt    DateTime  @default(now())
+  completedAt DateTime?
+  itemsScraped Int       @default(0)
+  errors       String?   // JSON array of error messages
+  metadata     String?   // JSON object for additional data
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([startedAt])
+}
+

@@ -1,0 +1,7 @@
+{
+  "regions": ["iad1"],
+  "env": {
+    "PRISMA_GENERATE_DATAPROXY": "false"
+  }
+}
+

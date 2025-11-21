@@ -1,0 +1,20 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#2563eb" stroke="#1e40af" stroke-width="8"/>
+  
+  <!-- Shopping cart -->
+  <path d="M160 192 L160 160 C160 124.65 188.65 96 224 96 L288 96 C323.35 96 352 124.65 352 160 L352 192" 
+        stroke="white" stroke-width="20" stroke-linecap="round" fill="none"/>
+  <path d="M128 192 L384 192 L368 352 C368 369.67 353.67 384 336 384 L176 384 C158.33 384 144 369.67 144 352 L128 192 Z" 
+        stroke="white" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="192" cy="416" r="24" fill="white"/>
+  <circle cx="320" cy="416" r="24" fill="white"/>
+  
+  <!-- Price tag -->
+  <path d="M320 128 L416 128 C425.94 128 434 136.06 434 146 L434 240 L320 128 Z" 
+        fill="#fbbf24" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M320 128 L320 240 L416 240 L416 128 L320 128 Z" 
+        fill="#f59e0b" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+  <text x="368" y="192" font-family="Arial, sans-serif" font-size="96" font-weight="bold" fill="white" text-anchor="middle">%</text>
+</svg>
+
