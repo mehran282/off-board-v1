@@ -29,11 +29,7 @@ npm install
 
 2. Set up environment variables:
 
-<<<<<<< HEAD
 Create a `.env.local` file in the frontend directory:
-=======
-Create a `.env.local` file in the root directory:
->>>>>>> b1c3c441c46eaccc9715bf2096dc13e3990f11fa
 
 ```env
 DATABASE_URL="postgresql://postgres:password@db.project-ref.supabase.co:5432/postgres?sslmode=require"
@@ -42,11 +38,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-<<<<<<< HEAD
 See [frontend/SUPABASE_SETUP.md](./frontend/SUPABASE_SETUP.md) for detailed setup instructions.
-=======
-See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for detailed setup instructions.
->>>>>>> b1c3c441c46eaccc9715bf2096dc13e3990f11fa
 
 3. Generate Prisma Client:
 
