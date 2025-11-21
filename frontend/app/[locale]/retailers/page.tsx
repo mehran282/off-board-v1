@@ -48,28 +48,28 @@ async function getRetailers(
         skip,
         take: limit,
       }),
-      prisma.retailer.count({ where }),
-      prisma.retailer
-        .groupBy({
-          by: ['category'],
+    prisma.retailer.count({ where }),
+    (prisma.retailer
+      .groupBy({
+        by: ['category'],
+        _count: {
+          id: true,
+        },
+        orderBy: {
           _count: {
-            id: true,
+            id: 'desc',
           },
-          orderBy: {
-            _count: {
-              id: 'desc',
-            },
-          },
-        })
-        .then((cats: Array<{ category: string | null; _count: { id: number } }>) =>
-          cats
-            .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
-            .map((c: { category: string | null; _count: { id: number } }) => ({
-              name: c.category!,
-              count: c._count.id,
-            }))
-        )
-        .catch(() => []),
+        },
+      }) as unknown as Promise<Array<{ category: string | null; _count: { id: number } }>>)
+      .then((cats) =>
+        cats
+          .filter((c): c is { category: string; _count: { id: number } } => c.category !== null)
+          .map((c) => ({
+            name: c.category,
+            count: c._count.id,
+          }))
+      )
+      .catch(() => []),
     ]);
 
     return { retailers, total, categories };

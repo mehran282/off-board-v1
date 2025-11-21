@@ -25,45 +25,58 @@ export async function generateMetadata({ params }: SearchPageProps): Promise<Met
 }
 
 async function searchOffers(query: string) {
-  const offers = await prisma.offer.findMany({
-    where: {
-      OR: [
-        {
-          productName: {
-            contains: query,
-            mode: 'insensitive',
+  try {
+    const offers = await prisma.offer.findMany({
+      where: {
+        OR: [
+          {
+            productName: {
+              contains: query,
+              mode: 'insensitive',
+            },
           },
-        },
-        {
-          brand: {
-            contains: query,
-            mode: 'insensitive',
+          {
+            brand: {
+              contains: query,
+              mode: 'insensitive',
+            },
           },
-        },
-        {
-          category: {
-            contains: query,
-            mode: 'insensitive',
+          {
+            category: {
+              contains: query,
+              mode: 'insensitive',
+            },
           },
-        },
-      ],
-    },
-    include: {
-      retailer: {
-        select: {
-          id: true,
-          name: true,
-          logoUrl: true,
+        ],
+      },
+      select: {
+        id: true,
+        productName: true,
+        brand: true,
+        currentPrice: true,
+        oldPrice: true,
+        discountPercentage: true,
+        imageUrl: true,
+        validUntil: true,
+        retailer: {
+          select: {
+            id: true,
+            name: true,
+            logoUrl: true,
+          },
         },
       },
-    },
-    orderBy: {
-      discountPercentage: 'desc',
-    },
-    take: 50,
-  });
+      orderBy: {
+        discountPercentage: 'desc',
+      },
+      take: 50,
+    });
 
-  return offers;
+    return offers;
+  } catch (error) {
+    console.error('Error searching offers:', error);
+    return [];
+  }
 }
 
 export default async function SearchPage({ params, searchParams }: SearchPageProps) {
@@ -96,7 +109,7 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
 
         {offers.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-            {offers.map((offer: {
+            {(offers as unknown as Array<{
               id: string;
               productName: string;
               brand: string | null;
@@ -104,13 +117,13 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
               oldPrice: number | null;
               discountPercentage: number | null;
               imageUrl: string | null;
+              validUntil: Date | null;
               retailer: {
                 id: string;
                 name: string;
                 logoUrl: string | null;
               };
-              validUntil: Date | null;
-            }) => (
+            }>).map((offer) => (
               <OfferCard
                 key={offer.id}
                 id={offer.id}

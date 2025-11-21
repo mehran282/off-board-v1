@@ -64,7 +64,7 @@ async function getOffers(
       take: limit,
     }),
     prisma.offer.count({ where }),
-    prisma.offer
+    (prisma.offer
       .groupBy({
         by: ['category'],
         where: {
@@ -80,13 +80,16 @@ async function getOffers(
             id: 'desc',
           },
         },
-      })
+      }) as unknown as Promise<Array<{ category: string | null; _count: { id: number } }>>)
       .then((cats) =>
-        cats.map((c) => ({
-          name: c.category!,
-          count: c._count.id,
-        }))
-      ),
+        cats
+          .filter((c): c is { category: string; _count: { id: number } } => c.category !== null)
+          .map((c) => ({
+            name: c.category,
+            count: c._count.id,
+          }))
+      )
+      .catch(() => []),
     prisma.retailer.findMany({
       select: {
         id: true,

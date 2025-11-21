@@ -21,10 +21,12 @@ export async function GET() {
     });
 
     return NextResponse.json({
-      categories: categories.map((c) => ({
-        name: c.category,
-        count: c._count.id,
-      })),
+      categories: (categories as unknown as Array<{ category: string | null; _count: { id: number } }>)
+        .filter((c) => c.category !== null)
+        .map((c) => ({
+          name: c.category!,
+          count: c._count.id,
+        })),
     });
   } catch (error) {
     console.error('Error fetching categories:', error);
