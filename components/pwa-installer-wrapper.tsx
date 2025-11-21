@@ -1,10 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const PWAInstaller = dynamic(() => import('@/components/pwa-installer').then(mod => ({ default: mod.PWAInstaller })), {
-  ssr: false,
-});
+import { PWAInstaller } from './pwa-installer';
 
 export function PWAInstallerWrapper() {
   return <PWAInstaller />;

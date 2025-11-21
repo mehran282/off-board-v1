@@ -11,6 +11,26 @@ export function PWAInstaller() {
   const deferredPromptRef = useRef<any>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  
+  // Safe translation getters with fallbacks
+  const getInstallAppAriaLabel = () => {
+    try {
+      return t('installAppAriaLabel');
+    } catch {
+      return 'Install app';
+    }
+  };
+  
+  const getInstallAppText = () => {
+    try {
+      return t('installApp');
+    } catch {
+      return 'Install App';
+    }
+  };
+  
+  const installAppAriaLabel = getInstallAppAriaLabel();
+  const installAppText = getInstallAppText();
 
   useEffect(() => {
     // Check if app is already installed
@@ -148,10 +168,10 @@ export function PWAInstaller() {
       <button
         onClick={handleInstallClick}
         className="bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 transition-colors"
-        aria-label={t('installAppAriaLabel')}
+        aria-label={installAppAriaLabel}
       >
         <Smartphone className="h-5 w-5" />
-        {t('installApp')}
+        {installAppText}
       </button>
     </div>
   );
