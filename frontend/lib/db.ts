@@ -1,41 +1,35 @@
 import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate';
 
-let prisma: ReturnType<typeof createPrismaClient>;
+let prisma: PrismaClient;
 
 declare global {
   // eslint-disable-next-line no-var
-  var __prisma: ReturnType<typeof createPrismaClient> | undefined;
+  var __prisma: PrismaClient | undefined;
 }
 
-function createPrismaClient() {
-  const accelerateUrl = process.env.DATABASE_URL;
+function getPrismaClient(): PrismaClient {
+  const databaseUrl = process.env.DATABASE_URL;
 
-  if (!accelerateUrl) {
+  if (!databaseUrl) {
     throw new Error('DATABASE_URL environment variable is not set');
   }
 
-  return new PrismaClient({
-    accelerateUrl,
-  }).$extends(withAccelerate());
-}
-
-function getPrismaClient() {
   if (process.env.NODE_ENV === 'production') {
     if (!prisma) {
-      prisma = createPrismaClient();
+      prisma = new PrismaClient().$extends(withAccelerate());
     }
     return prisma;
   } else {
     if (!global.__prisma) {
-      global.__prisma = createPrismaClient();
+      global.__prisma = new PrismaClient().$extends(withAccelerate());
     }
     return global.__prisma;
   }
 }
 
 // Lazy initialization - only create client when actually used
-const prismaProxy = new Proxy({} as ReturnType<typeof createPrismaClient>, {
+const prismaProxy = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     const client = getPrismaClient();
     const value = (client as any)[prop];
