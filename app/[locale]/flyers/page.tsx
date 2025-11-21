@@ -20,7 +20,14 @@ async function getFlyers(
   const [flyers, total, retailers] = await Promise.all([
     prisma.flyer.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        title: true,
+        pages: true,
+        validFrom: true,
+        validUntil: true,
+        pdfUrl: true,
+        thumbnailUrl: true,
         retailer: {
           select: {
             id: true,
