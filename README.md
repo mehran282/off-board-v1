@@ -9,7 +9,7 @@ Frontend application for displaying catalogs and discounts from kaufDA.de scrape
 - **Tailwind CSS v4** - Styling
 - **shadcn/ui** - UI components
 - **Prisma** - Database ORM
-- **PostgreSQL (Neon)** - Database
+- **PostgreSQL (Supabase)** - Database
 
 ## Getting Started
 
@@ -17,7 +17,7 @@ Frontend application for displaying catalogs and discounts from kaufDA.de scrape
 
 - Node.js 18+ 
 - npm or yarn
-- PostgreSQL database (Neon)
+- PostgreSQL database (Supabase)
 
 ### Installation
 
@@ -29,12 +29,16 @@ npm install
 
 2. Set up environment variables:
 
-Create a `.env` file in the root directory:
+Create a `.env.local` file in the frontend directory:
 
 ```env
-DATABASE_URL="postgresql://user:password@host:5432/database?sslmode=require"
+DATABASE_URL="postgresql://postgres:password@db.project-ref.supabase.co:5432/postgres?sslmode=require"
+NEXT_PUBLIC_SUPABASE_URL=https://project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
+
+See [frontend/SUPABASE_SETUP.md](./frontend/SUPABASE_SETUP.md) for detailed setup instructions.
 
 3. Generate Prisma Client:
 
@@ -110,7 +114,7 @@ frontend/
 
 ## Database
 
-The application uses Prisma ORM with PostgreSQL (Neon). Make sure the database schema is up to date:
+The application uses Prisma ORM with PostgreSQL (Supabase). Make sure the database schema is up to date:
 
 ```bash
 npx prisma generate
