@@ -35,20 +35,27 @@ interface OfferDetailPageProps {
 export async function generateMetadata({
   params,
 }: OfferDetailPageProps): Promise<Metadata> {
-  const { locale, id } = await params;
-  const offer = await getOffer(id);
-  const t = await getTranslations({ locale, namespace: 'offers' });
+  try {
+    const { locale, id } = await params;
+    const offer = await getOffer(id);
+    const t = await getTranslations({ locale, namespace: 'offers' });
 
-  if (!offer) {
+    if (!offer) {
+      return {
+        title: t('notFound'),
+      };
+    }
+
     return {
-      title: t('notFound'),
+      title: offer.productName,
+      description: `${offer.productName} ${t('from')} ${offer.retailer.name} - ${offer.currentPrice}€${offer.discountPercentage ? ` (${Math.round(offer.discountPercentage)}% ${t('discount')})` : ''}`,
+    };
+  } catch (error) {
+    console.error('Error generating metadata for offer:', error);
+    return {
+      title: 'Offer',
     };
   }
-
-  return {
-    title: offer.productName,
-    description: `${offer.productName} ${t('from')} ${offer.retailer.name} - ${offer.currentPrice}€${offer.discountPercentage ? ` (${Math.round(offer.discountPercentage)}% ${t('discount')})` : ''}`,
-  };
 }
 
 export default async function OfferDetailPage({ params }: OfferDetailPageProps) {

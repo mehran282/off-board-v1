@@ -17,81 +17,87 @@ async function getOffers(
   search?: string | null,
   minDiscount?: string | null
 ) {
-  const skip = (page - 1) * limit;
-  const where: any = {};
+  try {
+    const skip = (page - 1) * limit;
+    const where: any = {};
 
-  if (retailerId) {
-    where.retailerId = retailerId;
-  }
+    if (retailerId) {
+      where.retailerId = retailerId;
+    }
 
-  if (category) {
-    where.category = category;
-  }
+    if (category) {
+      where.category = category;
+    }
 
-  if (search) {
-    where.productName = {
-      contains: search,
-      mode: 'insensitive',
-    };
-  }
+    if (search) {
+      where.productName = {
+        contains: search,
+        mode: 'insensitive',
+      };
+    }
 
-  if (minDiscount) {
-    where.discountPercentage = {
-      gte: parseFloat(minDiscount),
-    };
-  }
+    if (minDiscount) {
+      where.discountPercentage = {
+        gte: parseFloat(minDiscount),
+      };
+    }
 
-  const [offers, total, categories, retailers] = await Promise.all([
-    prisma.offer.findMany({
-      where,
-      include: {
-        retailer: {
-          select: {
-            id: true,
-            name: true,
-            logoUrl: true,
+    const [offers, total, categories, retailers] = await Promise.all([
+      prisma.offer.findMany({
+        where,
+        include: {
+          retailer: {
+            select: {
+              id: true,
+              name: true,
+              logoUrl: true,
+            },
           },
-        },
-      },
-      orderBy: {
-        discountPercentage: 'desc',
-      },
-      skip,
-      take: limit,
-    }),
-    prisma.offer.count({ where }),
-    prisma.offer
-      .groupBy({
-        by: ['category'],
-        _count: {
-          id: true,
         },
         orderBy: {
-          _count: {
-            id: 'desc',
-          },
+          discountPercentage: 'desc',
         },
-      })
-      .then((cats: Array<{ category: string | null; _count: { id: number } }>) =>
-        cats
-          .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
-          .map((c: { category: string | null; _count: { id: number } }) => ({
-            name: c.category!,
-            count: c._count.id,
-          }))
-      ),
-    prisma.retailer.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      orderBy: {
-        name: 'asc',
-      },
-    }),
-  ]);
+        skip,
+        take: limit,
+      }),
+      prisma.offer.count({ where }),
+      prisma.offer
+        .groupBy({
+          by: ['category'],
+          _count: {
+            id: true,
+          },
+          orderBy: {
+            _count: {
+              id: 'desc',
+            },
+          },
+        })
+        .then((cats: Array<{ category: string | null; _count: { id: number } }>) =>
+          cats
+            .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
+            .map((c: { category: string | null; _count: { id: number } }) => ({
+              name: c.category!,
+              count: c._count.id,
+            }))
+        )
+        .catch(() => []),
+      prisma.retailer.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: {
+          name: 'asc',
+        },
+      }),
+    ]);
 
-  return { offers, total, categories, retailers };
+    return { offers, total, categories, retailers };
+  } catch (error) {
+    console.error('Error fetching offers:', error);
+    return { offers: [], total: 0, categories: [], retailers: [] };
+  }
 }
 
 interface OffersPageProps {

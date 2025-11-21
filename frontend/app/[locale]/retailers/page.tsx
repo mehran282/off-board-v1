@@ -15,62 +15,68 @@ async function getRetailers(
   category?: string | null,
   search?: string | null
 ) {
-  const skip = (page - 1) * limit;
-  const where: any = {};
+  try {
+    const skip = (page - 1) * limit;
+    const where: any = {};
 
-  if (category) {
-    where.category = category;
-  }
+    if (category) {
+      where.category = category;
+    }
 
-  if (search) {
-    where.name = {
-      contains: search,
-      mode: 'insensitive',
-    };
-  }
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: 'insensitive',
+      };
+    }
 
-  const [retailers, total, categories] = await Promise.all([
-    prisma.retailer.findMany({
-      where,
-      include: {
-        _count: {
-          select: {
-            flyers: true,
-            offers: true,
-            stores: true,
+    const [retailers, total, categories] = await Promise.all([
+      prisma.retailer.findMany({
+        where,
+        include: {
+          _count: {
+            select: {
+              flyers: true,
+              offers: true,
+              stores: true,
+            },
           },
-        },
-      },
-      orderBy: {
-        name: 'asc',
-      },
-      skip,
-      take: limit,
-    }),
-    prisma.retailer.count({ where }),
-    prisma.retailer
-      .groupBy({
-        by: ['category'],
-        _count: {
-          id: true,
         },
         orderBy: {
-          _count: {
-            id: 'desc',
-          },
+          name: 'asc',
         },
-      })
-      .then((cats: Array<{ category: string | null; _count: { id: number } }>) =>
-        cats
-          .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
-          .map((c: { category: string | null; _count: { id: number } }) => ({
-            name: c.category!,
-            count: c._count.id,
-          }))
-      ),
-  ]);
+        skip,
+        take: limit,
+      }),
+      prisma.retailer.count({ where }),
+      prisma.retailer
+        .groupBy({
+          by: ['category'],
+          _count: {
+            id: true,
+          },
+          orderBy: {
+            _count: {
+              id: 'desc',
+            },
+          },
+        })
+        .then((cats: Array<{ category: string | null; _count: { id: number } }>) =>
+          cats
+            .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
+            .map((c: { category: string | null; _count: { id: number } }) => ({
+              name: c.category!,
+              count: c._count.id,
+            }))
+        )
+        .catch(() => []),
+    ]);
 
-  return { retailers, total, categories };
+    return { retailers, total, categories };
+  } catch (error) {
+    console.error('Error fetching retailers:', error);
+    return { retailers: [], total: 0, categories: [] };
+  }
 }
 
 interface RetailersPageProps {

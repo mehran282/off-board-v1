@@ -14,52 +14,57 @@ async function getFlyers(
   limit: number,
   retailerId?: string | null
 ) {
-  const skip = (page - 1) * limit;
-  const where = retailerId ? { retailerId } : {};
+  try {
+    const skip = (page - 1) * limit;
+    const where = retailerId ? { retailerId } : {};
 
-  const [flyers, total, retailers] = await Promise.all([
-    prisma.flyer.findMany({
-      where,
-      select: {
-        id: true,
-        title: true,
-        pages: true,
-        validFrom: true,
-        validUntil: true,
-        pdfUrl: true,
-        thumbnailUrl: true,
-        retailer: {
-          select: {
-            id: true,
-            name: true,
-            logoUrl: true,
+    const [flyers, total, retailers] = await Promise.all([
+      prisma.flyer.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          pages: true,
+          validFrom: true,
+          validUntil: true,
+          pdfUrl: true,
+          thumbnailUrl: true,
+          retailer: {
+            select: {
+              id: true,
+              name: true,
+              logoUrl: true,
+            },
+          },
+          _count: {
+            select: {
+              offers: true,
+            },
           },
         },
-        _count: {
-          select: {
-            offers: true,
-          },
+        orderBy: {
+          validUntil: 'desc',
         },
-      },
-      orderBy: {
-        validUntil: 'desc',
-      },
-      skip,
-      take: limit,
-    }),
-    prisma.flyer.count({ where }),
-    prisma.retailer.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      orderBy: {
-        name: 'asc',
-      },
-    }),
-  ]);
+        skip,
+        take: limit,
+      }),
+      prisma.flyer.count({ where }),
+      prisma.retailer.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: {
+          name: 'asc',
+        },
+      }),
+    ]);
 
-  return { flyers, total, retailers };
+    return { flyers, total, retailers };
+  } catch (error) {
+    console.error('Error fetching flyers:', error);
+    return { flyers: [], total: 0, retailers: [] };
+  }
 }
 
 interface FlyersPageProps {

@@ -78,20 +78,27 @@ interface RetailerDetailPageProps {
 export async function generateMetadata({
   params,
 }: RetailerDetailPageProps): Promise<Metadata> {
-  const { locale, id } = await params;
-  const retailer = await getRetailer(id);
-  const t = await getTranslations({ locale, namespace: 'retailers' });
+  try {
+    const { locale, id } = await params;
+    const retailer = await getRetailer(id);
+    const t = await getTranslations({ locale, namespace: 'retailers' });
 
-  if (!retailer) {
+    if (!retailer) {
+      return {
+        title: t('notFound'),
+      };
+    }
+
     return {
-      title: t('notFound'),
+      title: retailer.name,
+      description: `${retailer.name} - ${retailer.category} ${t('with')} ${retailer._count.offers} ${t('offers')} ${t('and')} ${retailer._count.flyers} ${t('flyers')}`,
+    };
+  } catch (error) {
+    console.error('Error generating metadata for retailer:', error);
+    return {
+      title: 'Retailer',
     };
   }
-
-  return {
-    title: retailer.name,
-    description: `${retailer.name} - ${retailer.category} ${t('with')} ${retailer._count.offers} ${t('offers')} ${t('and')} ${retailer._count.flyers} ${t('flyers')}`,
-  };
 }
 
 export default async function RetailerDetailPage({

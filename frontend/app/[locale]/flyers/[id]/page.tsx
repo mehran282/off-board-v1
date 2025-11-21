@@ -47,20 +47,27 @@ interface FlyerDetailPageProps {
 export async function generateMetadata({
   params,
 }: FlyerDetailPageProps): Promise<Metadata> {
-  const { locale, id } = await params;
-  const flyer = await getFlyer(id);
-  const t = await getTranslations({ locale, namespace: 'flyers' });
+  try {
+    const { locale, id } = await params;
+    const flyer = await getFlyer(id);
+    const t = await getTranslations({ locale, namespace: 'flyers' });
 
-  if (!flyer) {
+    if (!flyer) {
+      return {
+        title: t('notFound'),
+      };
+    }
+
     return {
-      title: t('notFound'),
+      title: flyer.title,
+      description: `${flyer.title} ${t('from')} ${flyer.retailer.name} - ${t('validUntil')} ${new Date(flyer.validUntil).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US')}`,
+    };
+  } catch (error) {
+    console.error('Error generating metadata for flyer:', error);
+    return {
+      title: 'Flyer',
     };
   }
-
-  return {
-    title: flyer.title,
-    description: `${flyer.title} ${t('from')} ${flyer.retailer.name} - ${t('validUntil')} ${new Date(flyer.validUntil).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US')}`,
-  };
 }
 
 export default async function FlyerDetailPage({ params }: FlyerDetailPageProps) {
