@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Vercel optimizations
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
 };
 
 export default withNextIntl(nextConfig);
