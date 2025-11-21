@@ -96,7 +96,21 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
 
         {offers.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-            {offers.map((offer) => (
+            {offers.map((offer: {
+              id: string;
+              productName: string;
+              brand: string | null;
+              currentPrice: number;
+              oldPrice: number | null;
+              discountPercentage: number | null;
+              imageUrl: string | null;
+              retailer: {
+                id: string;
+                name: string;
+                logoUrl: string | null;
+              };
+              validUntil: Date | null;
+            }) => (
               <OfferCard
                 key={offer.id}
                 id={offer.id}

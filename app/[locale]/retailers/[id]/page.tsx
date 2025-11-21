@@ -163,7 +163,13 @@ export default async function RetailerDetailPage({
               {t('storeLocations')} ({retailer.stores.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {retailer.stores.map((store) => (
+              {retailer.stores.map((store: {
+                id: string;
+                address: string;
+                city: string;
+                postalCode: string;
+                phone: string | null;
+              }) => (
                 <div key={store.id} className="border rounded-lg p-4">
                   <p className="font-semibold mb-1">{store.address}</p>
                   <p className="text-sm text-muted-foreground">
@@ -192,7 +198,21 @@ export default async function RetailerDetailPage({
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {retailer.flyers.map((flyer) => (
+              {retailer.flyers.map((flyer: {
+                id: string;
+                title: string;
+                pages: number;
+                validFrom: Date;
+                validUntil: Date;
+                retailer: {
+                  id: string;
+                  name: string;
+                  logoUrl: string | null;
+                };
+                _count: {
+                  offers: number;
+                };
+              }) => (
                 <FlyerCard
                   key={flyer.id}
                   id={flyer.id}
@@ -220,7 +240,21 @@ export default async function RetailerDetailPage({
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {retailer.offers.map((offer) => (
+              {retailer.offers.map((offer: {
+                id: string;
+                productName: string;
+                brand: string | null;
+                currentPrice: number;
+                oldPrice: number | null;
+                discountPercentage: number | null;
+                imageUrl: string | null;
+                retailer: {
+                  id: string;
+                  name: string;
+                  logoUrl: string | null;
+                };
+                validUntil: Date | null;
+              }) => (
                 <OfferCard
                   key={offer.id}
                   id={offer.id}

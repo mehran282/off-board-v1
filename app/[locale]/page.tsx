@@ -193,7 +193,23 @@ export default async function HomePage({ params }: HomePageProps) {
                   </Link>
                 </div>
                 <div className="grid grid-cols-3 gap-6">
-                  {recentFlyers.map((flyer) => (
+                  {recentFlyers.map((flyer: {
+                    id: string;
+                    title: string;
+                    pages: number;
+                    validFrom: Date;
+                    validUntil: Date;
+                    pdfUrl: string | null;
+                    thumbnailUrl: string | null;
+                    retailer: {
+                      id: string;
+                      name: string;
+                      logoUrl: string | null;
+                    };
+                    _count: {
+                      offers: number;
+                    };
+                  }) => (
                     <FlyerCard
                       key={flyer.id}
                       id={flyer.id}
@@ -215,7 +231,29 @@ export default async function HomePage({ params }: HomePageProps) {
             {topRetailersWithOffers.length > 0 && (
               <section className="py-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {topRetailersWithOffers.slice(0, 2).map((retailer) => (
+                  {topRetailersWithOffers.slice(0, 2).map((retailer: {
+                    id: string;
+                    name: string;
+                    logoUrl: string | null;
+                    _count: {
+                      offers: number;
+                    };
+                    offers: Array<{
+                      id: string;
+                      productName: string;
+                      brand: string | null;
+                      currentPrice: number;
+                      oldPrice: number | null;
+                      discountPercentage: number | null;
+                      imageUrl: string | null;
+                      retailer: {
+                        id: string;
+                        name: string;
+                        logoUrl: string | null;
+                      };
+                      validUntil: Date | null;
+                    }>;
+                  }) => (
                     <div key={retailer.id} className="p-4 h-full flex flex-col">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
@@ -245,7 +283,21 @@ export default async function HomePage({ params }: HomePageProps) {
                         </Link>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 flex-1">
-                        {retailer.offers.slice(0, 8).map((offer) => (
+                        {retailer.offers.slice(0, 8).map((offer: {
+                          id: string;
+                          productName: string;
+                          brand: string | null;
+                          currentPrice: number;
+                          oldPrice: number | null;
+                          discountPercentage: number | null;
+                          imageUrl: string | null;
+                          retailer: {
+                            id: string;
+                            name: string;
+                            logoUrl: string | null;
+                          };
+                          validUntil: Date | null;
+                        }) => (
                           <div key={offer.id} className="w-full">
                             <OfferCard
                               id={offer.id}
@@ -283,7 +335,21 @@ export default async function HomePage({ params }: HomePageProps) {
                   </Link>
                 </div>
                 <div className="grid grid-cols-5 gap-2">
-                  {topOffers.map((offer) => (
+                  {topOffers.map((offer: {
+                    id: string;
+                    productName: string;
+                    brand: string | null;
+                    currentPrice: number;
+                    oldPrice: number | null;
+                    discountPercentage: number | null;
+                    imageUrl: string | null;
+                    retailer: {
+                      id: string;
+                      name: string;
+                      logoUrl: string | null;
+                    };
+                    validUntil: Date | null;
+                  }) => (
                     <div key={offer.id} className="w-full">
                       <OfferCard
                         id={offer.id}
@@ -318,7 +384,17 @@ export default async function HomePage({ params }: HomePageProps) {
                   </Link>
                 </div>
                 <div className="grid grid-cols-5 gap-2">
-                  {topRetailers.map((retailer) => (
+                  {topRetailers.map((retailer: {
+                    id: string;
+                    name: string;
+                    category: string;
+                    logoUrl: string | null;
+                    _count: {
+                      flyers: number;
+                      offers: number;
+                      stores: number;
+                    };
+                  }) => (
                     <div key={retailer.id} className="w-full">
                       <RetailerCard
                         id={retailer.id}

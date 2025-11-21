@@ -74,8 +74,8 @@ async function getOffers(
       })
       .then((cats) =>
         cats
-          .filter((c) => c.category !== null)
-          .map((c) => ({
+          .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
+          .map((c: { category: string | null; _count: { id: number } }) => ({
             name: c.category!,
             count: c._count.id,
           }))
@@ -152,7 +152,21 @@ export default async function OffersPage({ params, searchParams }: OffersPagePro
             {offers.length > 0 ? (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
-                  {offers.map((offer) => (
+                  {offers.map((offer: {
+                    id: string;
+                    productName: string;
+                    brand: string | null;
+                    currentPrice: number;
+                    oldPrice: number | null;
+                    discountPercentage: number | null;
+                    imageUrl: string | null;
+                    retailer: {
+                      id: string;
+                      name: string;
+                      logoUrl: string | null;
+                    };
+                    validUntil: Date | null;
+                  }) => (
                     <OfferCard
                       key={offer.id}
                       id={offer.id}

@@ -114,7 +114,23 @@ export default async function FlyersPage({ params, searchParams }: FlyersPagePro
             {flyers.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  {flyers.map((flyer) => (
+                  {flyers.map((flyer: {
+                    id: string;
+                    title: string;
+                    pages: number;
+                    validFrom: Date;
+                    validUntil: Date;
+                    pdfUrl: string | null;
+                    thumbnailUrl: string | null;
+                    retailer: {
+                      id: string;
+                      name: string;
+                      logoUrl: string | null;
+                    };
+                    _count: {
+                      offers: number;
+                    };
+                  }) => (
                     <FlyerCard
                       key={flyer.id}
                       id={flyer.id}

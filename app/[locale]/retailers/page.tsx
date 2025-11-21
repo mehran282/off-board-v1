@@ -62,8 +62,8 @@ async function getRetailers(
       })
       .then((cats) =>
         cats
-          .filter((c) => c.category !== null)
-          .map((c) => ({
+          .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
+          .map((c: { category: string | null; _count: { id: number } }) => ({
             name: c.category!,
             count: c._count.id,
           }))
@@ -127,7 +127,17 @@ export default async function RetailersPage({ params, searchParams }: RetailersP
             {retailers.length > 0 ? (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
-                  {retailers.map((retailer) => (
+                  {retailers.map((retailer: {
+                    id: string;
+                    name: string;
+                    category: string;
+                    logoUrl: string | null;
+                    _count: {
+                      flyers: number;
+                      offers: number;
+                      stores: number;
+                    };
+                  }) => (
                     <RetailerCard
                       key={retailer.id}
                       id={retailer.id}
