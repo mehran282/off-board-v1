@@ -72,7 +72,7 @@ async function getOffers(
           },
         },
       })
-      .then((cats) =>
+      .then((cats: Array<{ category: string | null; _count: { id: number } }>) =>
         cats
           .filter((c: { category: string | null; _count: { id: number } }) => c.category !== null)
           .map((c: { category: string | null; _count: { id: number } }) => ({

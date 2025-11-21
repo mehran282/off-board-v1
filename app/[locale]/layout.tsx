@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n';
-import { PWAInstaller } from '@/components/pwa-installer';
+import { PWAInstallerWrapper } from '@/components/pwa-installer-wrapper';
 import '../globals.css';
 
 const geistSans = Geist({
@@ -90,7 +90,7 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider messages={messages}>
           {children}
-          <PWAInstaller />
+          <PWAInstallerWrapper />
         </NextIntlClientProvider>
       </body>
     </html>

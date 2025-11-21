@@ -16,7 +16,14 @@ async function getRecentFlyers() {
   try {
     const flyers = await prisma.flyer.findMany({
       take: 3,
-      include: {
+      select: {
+        id: true,
+        title: true,
+        pages: true,
+        validFrom: true,
+        validUntil: true,
+        pdfUrl: true,
+        thumbnailUrl: true,
         retailer: {
           select: {
             id: true,
