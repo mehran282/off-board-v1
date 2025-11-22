@@ -8,7 +8,8 @@ COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
 # Install dependencies
-RUN npm ci
+# Use npm install instead of npm ci to avoid lockfile issues
+RUN npm install --legacy-peer-deps
 
 # Stage 2: Builder
 FROM node:18-alpine AS builder
