@@ -70,6 +70,9 @@ class OffersSpider(scrapy.Spider):
                 # Extract basic info
                 item["productName"] = offer.get("title", "")
                 item["brand"] = offer.get("brand")
+                item["contentId"] = offer.get("id")
+                item["publisherId"] = offer.get("publisherId")
+                
                 # Description might be in different places
                 description = offer.get("description")
                 if not description:
@@ -78,9 +81,25 @@ class OffersSpider(scrapy.Spider):
                         description = preview.get("description")
                 item["description"] = description
                 
+                # Extract parent content (flyer info)
+                parent_content = offer.get("parentContent", {})
+                if parent_content:
+                    item["parentContentId"] = parent_content.get("id")
+                    page_info = parent_content.get("page", {})
+                    if page_info:
+                        item["pageNumber"] = page_info.get("number")
+                
                 # Extract prices
                 prices = offer.get("prices", {})
                 item["currentPrice"] = prices.get("mainPrice", 0.0) or prices.get("price", 0.0) or 0.0
+                item["priceFormatted"] = prices.get("mainPriceFormatted")
+                item["priceFrequency"] = prices.get("mainPriceFrequency")
+                
+                # Extract price conditions
+                conditions = prices.get("conditions", [])
+                if conditions:
+                    import json
+                    item["priceConditions"] = json.dumps(conditions)
                 
                 # Extract unit price
                 unit_price = prices.get("priceByBaseUnit")
@@ -89,6 +108,7 @@ class OffersSpider(scrapy.Spider):
                 
                 # Try multiple fields for old price
                 secondary_price = prices.get("secondaryPrice", 0.0)
+                item["oldPriceFormatted"] = prices.get("secondaryPriceFormatted")
                 
                 # Set oldPrice if secondary_price exists and is greater than currentPrice
                 if secondary_price and secondary_price > 0 and secondary_price > item["currentPrice"]:
@@ -114,11 +134,17 @@ class OffersSpider(scrapy.Spider):
                     except (ValueError, AttributeError):
                         pass
                 
-                # Extract image URL
+                # Extract image URL and metadata
                 offer_images = offer.get("offerImages", {})
                 image_url = offer_images.get("url", {})
                 if image_url:
                     item["imageUrl"] = image_url.get("large") or image_url.get("normal") or image_url.get("thumbnail")
+                
+                # Extract image metadata
+                image_metadata = offer_images.get("metaData", {})
+                if image_metadata:
+                    item["imageAlt"] = image_metadata.get("imageAlt")
+                    item["imageTitle"] = image_metadata.get("imageTitle")
                 
                 # Extract retailer
                 retailer_name = offer.get("publisherName", "")

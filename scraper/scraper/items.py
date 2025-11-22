@@ -14,11 +14,12 @@ class FlyerItem(scrapy.Item):
     url = scrapy.Field()
     pdfUrl = scrapy.Field(required=False)
     thumbnailUrl = scrapy.Field(required=False)
+    contentId = scrapy.Field(required=False)
+    publishedFrom = scrapy.Field(required=False)
+    publishedUntil = scrapy.Field(required=False)
 
 
 class OfferItem(scrapy.Item):
-    description = scrapy.Field(required=False)
-    validFrom = scrapy.Field(required=False)
     """Item for offer data"""
     flyerId = scrapy.Field(required=False)
     productId = scrapy.Field(required=False)
@@ -34,6 +35,18 @@ class OfferItem(scrapy.Item):
     url = scrapy.Field()
     imageUrl = scrapy.Field(required=False)
     validUntil = scrapy.Field(required=False)
+    validFrom = scrapy.Field(required=False)
+    description = scrapy.Field(required=False)
+    contentId = scrapy.Field(required=False)
+    parentContentId = scrapy.Field(required=False)
+    pageNumber = scrapy.Field(required=False)
+    publisherId = scrapy.Field(required=False)
+    priceFormatted = scrapy.Field(required=False)
+    oldPriceFormatted = scrapy.Field(required=False)
+    priceFrequency = scrapy.Field(required=False)
+    priceConditions = scrapy.Field(required=False)
+    imageAlt = scrapy.Field(required=False)
+    imageTitle = scrapy.Field(required=False)
 
 
 class RetailerItem(scrapy.Item):

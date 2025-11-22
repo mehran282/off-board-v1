@@ -28,18 +28,21 @@ model Retailer {
 }
 
 model Flyer {
-  id           String    @id @default(cuid())
-  retailerId   String
-  title        String
-  pages        Int
-  validFrom    DateTime
-  validUntil   DateTime
-  url          String    @unique
-  pdfUrl       String?
-  thumbnailUrl String?
-  scrapedAt    DateTime  @default(now())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  retailerId     String
+  title          String
+  pages          Int
+  validFrom      DateTime
+  validUntil     DateTime
+  url            String    @unique
+  pdfUrl         String?
+  thumbnailUrl   String?
+  contentId      String?   // UUID from JSON
+  publishedFrom  DateTime? // Publication start date
+  publishedUntil DateTime? // Publication end date
+  scrapedAt      DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   retailer Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
   offers   Offer[]
@@ -48,6 +51,7 @@ model Flyer {
   @@index([validFrom])
   @@index([validUntil])
   @@index([url])
+  @@index([contentId])
 }
 
 model Store {
@@ -91,24 +95,36 @@ model Product {
 }
 
 model Offer {
-  id                String    @id @default(cuid())
-  flyerId           String?
-  productId         String?
-  retailerId        String
-  productName        String
-  brand             String?
-  category          String?
-  currentPrice      Float
-  oldPrice          Float?
-  discount          Float?
-  discountPercentage Float?
-  unitPrice         String?
-  url               String    @unique
-  imageUrl          String?
-  validUntil        DateTime?
-  scrapedAt         DateTime  @default(now())
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id                  String    @id @default(cuid())
+  flyerId             String?
+  productId            String?
+  retailerId           String
+  productName          String
+  brand                String?
+  category             String?
+  currentPrice         Float
+  oldPrice             Float?
+  discount             Float?
+  discountPercentage   Float?
+  unitPrice            String?
+  url                  String    @unique
+  imageUrl             String?
+  validUntil           DateTime?
+  contentId            String?   // UUID from JSON
+  parentContentId      String?   // Flyer contentId from parentContent
+  pageNumber           Int?      // Page number in flyer
+  publisherId          String?   // Publisher ID from JSON
+  priceFormatted       String?   // Formatted price string
+  oldPriceFormatted    String?   // Formatted old price string
+  priceFrequency       String?   // Price frequency (ONCE, WEEKLY, etc.)
+  priceConditions      String?   // JSON string for price conditions
+  imageAlt             String?   // Image alt text from metadata
+  imageTitle           String?   // Image title from metadata
+  description          String?   // Offer description
+  validFrom            DateTime? // Offer valid from date
+  scrapedAt            DateTime  @default(now())
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   flyer    Flyer?    @relation(fields: [flyerId], references: [id], onDelete: SetNull)
   product  Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
@@ -121,6 +137,8 @@ model Offer {
   @@index([currentPrice])
   @@index([validUntil])
   @@index([url])
+  @@index([contentId])
+  @@index([parentContentId])
 }
 
 model ScrapingLog {

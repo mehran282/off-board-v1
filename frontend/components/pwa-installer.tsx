@@ -75,7 +75,13 @@ export function PWAInstaller() {
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Register service worker
-    if ('serviceWorker' in navigator) {
+    // Only register service worker in production (not in development)
+    // Check if we're in development by checking the hostname
+    const isDevelopment = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1' ||
+                         window.location.port === '3040';
+    
+    if ('serviceWorker' in navigator && !isDevelopment) {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
@@ -84,6 +90,13 @@ export function PWAInstaller() {
         .catch((error) => {
           console.log('Service Worker registration failed:', error);
         });
+    } else if (isDevelopment) {
+      // Unregister any existing service workers in development
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister();
+        });
+      });
     }
 
     // Show button by default (only if not installed)

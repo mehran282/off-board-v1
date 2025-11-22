@@ -169,6 +169,7 @@ class DatabasePipeline:
         flyer = session.query(Flyer).filter(Flyer.url == url).first()
         if flyer:
             # Update existing
+            self.logger.debug(f"Updating existing flyer {flyer.id} with contentId: {item.get('contentId')}, publishedFrom: {item.get('publishedFrom')}")
             flyer.title = item["title"]
             flyer.pages = item["pages"]
             flyer.validFrom = item["validFrom"]
@@ -177,6 +178,16 @@ class DatabasePipeline:
                 flyer.pdfUrl = normalize_url(item["pdfUrl"])
             if item.get("thumbnailUrl"):
                 flyer.thumbnailUrl = normalize_url(item["thumbnailUrl"])
+                self.logger.debug(f"Updated flyer {flyer.id} with thumbnailUrl: {item['thumbnailUrl']}")
+            if item.get("contentId"):
+                flyer.contentId = item["contentId"]
+                self.logger.debug(f"Updated flyer {flyer.id} with contentId: {item['contentId']}")
+            if item.get("publishedFrom"):
+                flyer.publishedFrom = item["publishedFrom"]
+                self.logger.debug(f"Updated flyer {flyer.id} with publishedFrom: {item['publishedFrom']}")
+            if item.get("publishedUntil"):
+                flyer.publishedUntil = item["publishedUntil"]
+                self.logger.debug(f"Updated flyer {flyer.id} with publishedUntil: {item['publishedUntil']}")
             flyer.scrapedAt = datetime.now(UTC)
             return flyer.id
 
@@ -202,6 +213,9 @@ class DatabasePipeline:
             raise ValueError("Retailer ID is required for flyer")
 
         # Create new flyer
+        self.logger.debug(f"Creating new flyer with contentId: {item.get('contentId')}, publishedFrom: {item.get('publishedFrom')}, thumbnailUrl: {item.get('thumbnailUrl')}")
+        thumbnail_url = normalize_url(item["thumbnailUrl"]) if item.get("thumbnailUrl") else None
+        self.logger.debug(f"Normalized thumbnailUrl: {thumbnail_url}")
         flyer = Flyer(
             retailerId=retailer_id,
             title=item["title"],
@@ -210,10 +224,14 @@ class DatabasePipeline:
             validUntil=item["validUntil"],
             url=url,
             pdfUrl=normalize_url(item["pdfUrl"]) if item.get("pdfUrl") else None,
-            thumbnailUrl=normalize_url(item["thumbnailUrl"]) if item.get("thumbnailUrl") else None,
+            thumbnailUrl=thumbnail_url,
+            contentId=item.get("contentId"),
+            publishedFrom=item.get("publishedFrom"),
+            publishedUntil=item.get("publishedUntil"),
         )
         session.add(flyer)
         session.flush()
+        self.logger.debug(f"Created flyer {flyer.id} with contentId: {flyer.contentId}, thumbnailUrl: {flyer.thumbnailUrl}")
         return flyer.id
 
     def _save_offer(self, item: Dict[str, Any], session):
@@ -229,6 +247,30 @@ class DatabasePipeline:
             offer.oldPrice = item.get("oldPrice")
             offer.discount = item.get("discount")
             offer.discountPercentage = item.get("discountPercentage")
+            if item.get("description"):
+                offer.description = item["description"]
+            if item.get("validFrom"):
+                offer.validFrom = item["validFrom"]
+            if item.get("contentId"):
+                offer.contentId = item["contentId"]
+            if item.get("parentContentId"):
+                offer.parentContentId = item["parentContentId"]
+            if item.get("pageNumber") is not None:
+                offer.pageNumber = item["pageNumber"]
+            if item.get("publisherId"):
+                offer.publisherId = item["publisherId"]
+            if item.get("priceFormatted"):
+                offer.priceFormatted = item["priceFormatted"]
+            if item.get("oldPriceFormatted"):
+                offer.oldPriceFormatted = item["oldPriceFormatted"]
+            if item.get("priceFrequency"):
+                offer.priceFrequency = item["priceFrequency"]
+            if item.get("priceConditions"):
+                offer.priceConditions = item["priceConditions"]
+            if item.get("imageAlt"):
+                offer.imageAlt = item["imageAlt"]
+            if item.get("imageTitle"):
+                offer.imageTitle = item["imageTitle"]
             # Update product relationship
             product_id = self._get_or_create_product(item, session)
             if product_id:
@@ -255,9 +297,15 @@ class DatabasePipeline:
         if not retailer_id:
             raise ValueError("Retailer ID is required for offer")
 
-        # Get flyer ID if provided
+        # Get flyer ID if provided (try by parentContentId first, then flyerId)
         flyer_id = item.get("flyerId")
-        if flyer_id:
+        parent_content_id = item.get("parentContentId")
+        if parent_content_id:
+            # Try to find flyer by contentId
+            flyer = session.query(Flyer).filter(Flyer.contentId == parent_content_id).first()
+            if flyer:
+                flyer_id = flyer.id
+        elif flyer_id:
             flyer = session.query(Flyer).filter(Flyer.id == flyer_id).first()
             if not flyer:
                 flyer_id = None
@@ -281,6 +329,18 @@ class DatabasePipeline:
             url=url,
             imageUrl=normalize_url(item["imageUrl"]) if item.get("imageUrl") else None,
             validUntil=item.get("validUntil"),
+            validFrom=item.get("validFrom"),
+            description=item.get("description"),
+            contentId=item.get("contentId"),
+            parentContentId=item.get("parentContentId"),
+            pageNumber=item.get("pageNumber"),
+            publisherId=item.get("publisherId"),
+            priceFormatted=item.get("priceFormatted"),
+            oldPriceFormatted=item.get("oldPriceFormatted"),
+            priceFrequency=item.get("priceFrequency"),
+            priceConditions=item.get("priceConditions"),
+            imageAlt=item.get("imageAlt"),
+            imageTitle=item.get("imageTitle"),
         )
         session.add(offer)
         session.flush()

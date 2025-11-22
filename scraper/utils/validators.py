@@ -13,6 +13,10 @@ class FlyerData(BaseModel):
     validUntil: datetime
     url: str
     pdfUrl: Optional[str] = None
+    thumbnailUrl: Optional[str] = None
+    contentId: Optional[str] = None
+    publishedFrom: Optional[datetime] = None
+    publishedUntil: Optional[datetime] = None
 
     @validator("validUntil")
     def validate_dates(cls, v, values):
@@ -37,6 +41,18 @@ class OfferData(BaseModel):
     unitPrice: Optional[str] = None
     imageUrl: Optional[str] = None
     validUntil: Optional[datetime] = None
+    validFrom: Optional[datetime] = None
+    description: Optional[str] = None
+    contentId: Optional[str] = None
+    parentContentId: Optional[str] = None
+    pageNumber: Optional[int] = None
+    publisherId: Optional[str] = None
+    priceFormatted: Optional[str] = None
+    oldPriceFormatted: Optional[str] = None
+    priceFrequency: Optional[str] = None
+    priceConditions: Optional[str] = None
+    imageAlt: Optional[str] = None
+    imageTitle: Optional[str] = None
 
 
 class RetailerData(BaseModel):

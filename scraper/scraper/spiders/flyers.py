@@ -5,7 +5,7 @@ import scrapy
 from datetime import datetime, UTC
 from scrapy_playwright.page import PageMethod
 from scrapy.http import Request
-from ..items import FlyerItem
+from ..items import FlyerItem, OfferItem
 
 
 class FlyersSpider(scrapy.Spider):
@@ -74,6 +74,10 @@ class FlyersSpider(scrapy.Spider):
                 # Extract basic info
                 item["title"] = brochure.get("title", "")
                 item["url"] = f"{self.base_url}/Prospekte/{brochure.get('id', '')}"
+                content_id = brochure.get("contentId")
+                item["contentId"] = content_id
+                if content_id:
+                    self.logger.debug(f"Extracted contentId: {content_id} for {item['title']}")
                 
                 # Extract retailer name
                 publisher = brochure.get("publisher", {})
@@ -82,6 +86,22 @@ class FlyersSpider(scrapy.Spider):
                 
                 # Extract pages
                 item["pages"] = brochure.get("pageCount", 0)
+                
+                # Extract published dates
+                published_from_str = brochure.get("publishedFrom")
+                published_until_str = brochure.get("publishedUntil")
+                
+                if published_from_str:
+                    try:
+                        item["publishedFrom"] = datetime.fromisoformat(published_from_str.replace("+0000", "+00:00"))
+                    except (ValueError, AttributeError):
+                        pass
+                
+                if published_until_str:
+                    try:
+                        item["publishedUntil"] = datetime.fromisoformat(published_until_str.replace("+0000", "+00:00"))
+                    except (ValueError, AttributeError):
+                        pass
                 
                 # Extract dates
                 valid_from_str = brochure.get("validFrom")
@@ -104,23 +124,51 @@ class FlyersSpider(scrapy.Spider):
                 else:
                     item["validUntil"] = datetime.now(UTC)
                 
-                # Extract preview image (thumbnail) - سایت خودش preview image دارد
-                # معمولاً در preview.url.large یا preview.url.normal است
-                preview = brochure.get("preview", {})
-                if preview:
-                    preview_url = preview.get("url", {})
-                    if isinstance(preview_url, dict):
-                        # Try different sizes
-                        thumbnail_url = (
-                            preview_url.get("large") or 
-                            preview_url.get("normal") or 
-                            preview_url.get("thumbnail") or
-                            preview_url.get("url")
-                        )
-                        if thumbnail_url:
-                            item["thumbnailUrl"] = thumbnail_url
-                    elif isinstance(preview_url, str):
-                        item["thumbnailUrl"] = preview_url
+                # Extract preview image (thumbnail) - در JSON جدید، thumbnail در pages[0].url است
+                # اول سعی می‌کنیم از pages[0].url استفاده کنیم
+                pages = brochure.get("pages", [])
+                if pages and len(pages) > 0:
+                    first_page = pages[0]
+                    if isinstance(first_page, dict):
+                        page_url = first_page.get("url", {})
+                        if isinstance(page_url, dict):
+                            # Try different sizes - large is best quality for thumbnail
+                            thumbnail_url = (
+                                page_url.get("large") or 
+                                page_url.get("normal") or 
+                                page_url.get("thumbnail") or
+                                page_url.get("url")
+                            )
+                            if thumbnail_url:
+                                item["thumbnailUrl"] = thumbnail_url
+                                self.logger.debug(f"Extracted thumbnailUrl from pages[0].url: {thumbnail_url}")
+                        elif isinstance(page_url, str):
+                            item["thumbnailUrl"] = page_url
+                            self.logger.debug(f"Extracted thumbnailUrl from pages[0].url (string): {page_url}")
+                
+                # If still no thumbnail, try to get from preview image URL pattern
+                if not item.get("thumbnailUrl") and content_id:
+                    # Build preview URL from contentId
+                    preview_url = f"https://content-media.bonial.biz/{content_id}/preview.jpg"
+                    item["thumbnailUrl"] = preview_url
+                    self.logger.debug(f"Built thumbnailUrl from contentId: {preview_url}")
+                
+                # Fallback: Check preview field (for older JSON structure)
+                if not item.get("thumbnailUrl"):
+                    preview = brochure.get("preview", {})
+                    if preview:
+                        preview_url = preview.get("url", {})
+                        if isinstance(preview_url, dict):
+                            thumbnail_url = (
+                                preview_url.get("large") or 
+                                preview_url.get("normal") or 
+                                preview_url.get("thumbnail") or
+                                preview_url.get("url")
+                            )
+                            if thumbnail_url:
+                                item["thumbnailUrl"] = thumbnail_url
+                        elif isinstance(preview_url, str):
+                            item["thumbnailUrl"] = preview_url
                 
                 # Also check direct preview/image fields
                 if not item.get("thumbnailUrl"):
@@ -148,33 +196,28 @@ class FlyersSpider(scrapy.Spider):
                             preview_url = pdf_url.rstrip("/") + "/preview.jpg"
                         item["thumbnailUrl"] = preview_url
                 
-                # Extract PDF URL - باید URL صحیح PDF را پیدا کنیم
-                # معمولاً در downloadUrl یا pdfUrl یا pages[0].url است
-                pdf_url = brochure.get("downloadUrl") or brochure.get("pdfUrl")
-                if pdf_url:
-                    item["pdfUrl"] = pdf_url
-                else:
-                    # Fallback: از pages استخراج کنیم
-                    pages = brochure.get("pages", [])
-                    if pages and len(pages) > 0:
-                        first_page = pages[0]
-                        if isinstance(first_page, dict):
-                            page_url = first_page.get("url", {})
-                            if isinstance(page_url, dict):
-                                # برای PDF، معمولاً large یا normal است
-                                pdf_url = (
-                                    page_url.get("large") or 
-                                    page_url.get("normal") or 
-                                    page_url.get("url")
-                                )
-                                if pdf_url and pdf_url.endswith('.pdf'):
-                                    item["pdfUrl"] = pdf_url
-                            elif isinstance(page_url, str) and page_url.endswith('.pdf'):
-                                item["pdfUrl"] = page_url
-                        elif isinstance(first_page, str) and first_page.endswith('.pdf'):
-                            item["pdfUrl"] = first_page
+                # Extract PDF URL - flyers don't have PDF, they have images
+                # So we don't set pdfUrl, but we'll fetch pages from API later
+                # pdf_url = brochure.get("downloadUrl") or brochure.get("pdfUrl")
+                # if pdf_url:
+                #     item["pdfUrl"] = pdf_url
                 
+                # Yield flyer item first
                 yield item
+                
+                # Then fetch pages and offers from API if we have contentId
+                if content_id:
+                    # Request pages API to get page images and offers
+                    pages_api_url = f"https://content-viewer-be.kaufda.de/api/v1/brochures/{content_id}/pages?partner=kaufda_web&lat=52.522&lng=13.4161"
+                    yield Request(
+                        pages_api_url,
+                        callback=self.parse_flyer_pages,
+                        meta={
+                            "flyer_item": item,
+                            "content_id": content_id,
+                        },
+                        dont_filter=True,
+                    )
                 
         except Exception as e:
             self.logger.error(f"Error parsing JSON flyer data: {e}")
@@ -274,3 +317,99 @@ class FlyersSpider(scrapy.Spider):
             item["pdfUrl"] = pdf_url
 
         yield item
+
+    def parse_flyer_pages(self, response):
+        """Parse flyer pages API response to extract page images and offers"""
+        try:
+            data = json.loads(response.text)
+            contents = data.get("contents", [])
+            flyer_item = response.meta.get("flyer_item", {})
+            content_id = response.meta.get("content_id")
+            
+            self.logger.info(f"Found {len(contents)} pages for flyer {content_id}")
+            
+            # Note: thumbnailUrl should already be set from pages[0].url in parse_flyer_list
+            # But if not, we can extract from pages API as fallback
+            if contents:
+                first_page = contents[0]
+                images = first_page.get("images", [])
+                if images and not flyer_item.get("thumbnailUrl"):
+                    # Use the largest image (usually last one)
+                    thumbnail_url = images[-1].get("url") if images else None
+                    if thumbnail_url:
+                        # Create a flyer update item to update thumbnailUrl
+                        update_item = FlyerItem()
+                        update_item["url"] = flyer_item.get("url")
+                        update_item["thumbnailUrl"] = thumbnail_url
+                        update_item["title"] = flyer_item.get("title")  # Required field
+                        update_item["retailerId"] = flyer_item.get("retailerId")  # Required field
+                        update_item["pages"] = flyer_item.get("pages", 0)  # Required field
+                        update_item["validFrom"] = flyer_item.get("validFrom")  # Required field
+                        update_item["validUntil"] = flyer_item.get("validUntil")  # Required field
+                        self.logger.debug(f"Updating flyer with thumbnailUrl from pages API: {thumbnail_url}")
+                        yield update_item
+            
+            # Extract offers from all pages
+            for page_data in contents:
+                page_number = page_data.get("number", 0)
+                offers = page_data.get("offers", [])
+                
+                for offer_data in offers:
+                    offer_content = offer_data.get("content", {})
+                    if offer_content and offer_content.get("type") == "offer":
+                        # Create offer item
+                        offer_item = OfferItem()
+                        
+                        # Extract product info
+                        products = offer_content.get("products", [])
+                        if products:
+                            product = products[0]
+                            offer_item["productName"] = product.get("name", "")
+                            offer_item["brand"] = product.get("brandName")
+                            description_parts = product.get("description", [])
+                            if description_parts:
+                                offer_item["description"] = " ".join([d.get("paragraph", "") for d in description_parts if isinstance(d, dict)])
+                        
+                        # Extract price
+                        deals = offer_content.get("deals", [])
+                        if deals:
+                            deal = deals[0]
+                            offer_item["currentPrice"] = deal.get("min", 0.0) or deal.get("max", 0.0)
+                            offer_item["priceFormatted"] = f"{offer_item['currentPrice']} {deal.get('currencyCode', 'EUR')}"
+                            offer_item["priceFrequency"] = deal.get("frequency")
+                            offer_item["unitPrice"] = deal.get("priceByBaseUnit")
+                        
+                        # Extract image
+                        offer_item["imageUrl"] = offer_content.get("image")
+                        
+                        # Extract parent content info
+                        parent_content = offer_content.get("parentContent", {})
+                        if parent_content:
+                            offer_item["parentContentId"] = parent_content.get("id")
+                            page_info = parent_content.get("page", {})
+                            if page_info:
+                                offer_item["pageNumber"] = page_info.get("number")
+                        
+                        # Extract retailer
+                        publisher = offer_content.get("publisher", {})
+                        offer_item["retailerId"] = publisher.get("name", "")
+                        offer_item["publisherId"] = publisher.get("id")
+                        
+                        # Extract offer ID and URL
+                        offer_id = offer_content.get("id")
+                        offer_item["contentId"] = offer_id
+                        if offer_id:
+                            offer_item["url"] = f"{self.base_url}/Angebote/{offer_id}"
+                        
+                        # Extract category from categoryPaths
+                        category_paths = products[0].get("categoryPaths", []) if products else []
+                        if category_paths:
+                            # Use the most specific category (last one)
+                            offer_item["category"] = category_paths[-1].get("name")
+                        
+                        yield offer_item
+            
+        except Exception as e:
+            self.logger.error(f"Error parsing flyer pages API: {e}")
+            import traceback
+            self.logger.error(traceback.format_exc())

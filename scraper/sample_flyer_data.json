@@ -1,0 +1,71 @@
+{
+  "content": {
+    "contentBadges": [
+      {
+        "name": "expiring_soon"
+      }
+    ],
+    "id": "6a2cd8bc-e4ea-4c3b-9949-8969d25842c0",
+    "image": "https://content-media.bonial.biz/6a2cd8bc-e4ea-4c3b-9949-8969d25842c0/preview.jpg",
+    "legacyId": 2500912090,
+    "pageCount": 22,
+    "preview": false,
+    "publisher": {
+      "id": "DE-1062",
+      "type": "RETAILER",
+      "name": "REWE",
+      "primarySectorId": "DE-48",
+      "images": [
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=128x128",
+          "size": "128x128"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=64x64",
+          "size": "64x64"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=80x50",
+          "size": "80x50"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=60x25",
+          "size": "60x25"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=448x314",
+          "size": "448x314"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=224x157",
+          "size": "224x157"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=47x69",
+          "size": "47x69"
+        },
+        {
+          "url": "https://publisher-media.bonial.biz/publisher-logos/4f1b0687-1c9e-46a8-9545-526512ce8328.png?impolicy=47x69",
+          "size": "47x69",
+          "type": "offer"
+        }
+      ]
+    },
+    "title": "Dein Markt",
+    "type": "static_brochure",
+    "storeDetailsEnabled": false,
+    "nearestStoreEnabled": true,
+    "header": {
+      "image": "https://content-media.bonial.biz/6a2cd8bc-e4ea-4c3b-9949-8969d25842c0/08365443-4d23-3ab5-be35-a059aaf2949f.jpeg"
+    },
+    "validFrom": "2025-11-16T23:00:00.000+0000",
+    "validUntil": "2025-11-22T22:00:00.000+0000",
+    "showPremiumPanel": true
+  },
+  "externalTracking": {
+    "impression": [],
+    "click": [
+      "https://servedby.flashtalking.com/imp/2/263501;9130473;201;pixel;BonialInternationalDE;CPBonialBaseOffersAdgapId01984610141159891001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&cachebuster=${timestamp}"
+    ]
+  }
+}

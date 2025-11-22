@@ -16,6 +16,10 @@ class Flyer(BaseModel):
     validUntil = Column(DateTime, nullable=False, index=True)
     url = Column(String, unique=True, nullable=False, index=True)
     pdfUrl = Column(String, nullable=True)
+    thumbnailUrl = Column(String, nullable=True)
+    contentId = Column(String, nullable=True, index=True)
+    publishedFrom = Column(DateTime, nullable=True)
+    publishedUntil = Column(DateTime, nullable=True)
     scrapedAt = Column(DateTime, default=lambda: datetime.now(UTC), nullable=False)
 
     # Relationships
