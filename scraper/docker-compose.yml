@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  scraper:
+    image: ghcr.io/mehran282/off-board-scraper:latest
+    container_name: off-board-scraper
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SCRAPER_DELAY_MS=${SCRAPER_DELAY_MS:-2000}
+      - SCRAPER_RETRY_ATTEMPTS=${SCRAPER_RETRY_ATTEMPTS:-3}
+      - SCRAPER_TIMEOUT_MS=${SCRAPER_TIMEOUT_MS:-30000}
+      - SCRAPER_HEADLESS=${SCRAPER_HEADLESS:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - scraper-network
+
+networks:
+  scraper-network:
+    driver: bridge
+
