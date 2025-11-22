@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 
 export default function Error({
   error,
@@ -13,8 +13,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'de';
+  const locale = useLocale();
   const t = useTranslations('errors');
 
   useEffect(() => {
