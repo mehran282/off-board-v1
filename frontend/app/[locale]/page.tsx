@@ -184,36 +184,36 @@ export default async function HomePage({ params }: HomePageProps) {
       <Header />
       <main className="flex-1">
         <div className="w-full flex justify-center">
-          <div className="w-full max-w-[60%]">
+          <div className="w-full max-w-full lg:max-w-[60%] px-2 sm:px-4">
             {/* Hero Section */}
-            <section className="py-6">
-              <div className="text-center space-y-4 mb-4">
-                <h1 className="text-4xl md:text-5xl font-bold">{t('title')}</h1>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <section className="py-4 md:py-6 px-4">
+              <div className="text-center space-y-3 md:space-y-4 mb-4 md:mb-6">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold px-2">{t('title')}</h1>
+                <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
                   {t('subtitle')}
                 </p>
               </div>
-              <div className="flex justify-center mb-6">
+              <div className="flex justify-center mb-4 md:mb-6 px-4">
                 <SearchBar />
               </div>
             </section>
 
             {/* Recent Flyers */}
             {recentFlyers.length > 0 && (
-              <section className="py-4">
-                <div className="flex items-center justify-between mb-6">
+              <section className="py-4 px-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 md:mb-6">
                   <div className="flex items-center gap-2">
-                    <FileText className="h-6 w-6" />
-                    <h2 className="text-2xl font-bold">{t('recentFlyers')}</h2>
+                    <FileText className="h-5 w-5 md:h-6 md:w-6" />
+                    <h2 className="text-xl md:text-2xl font-bold">{t('recentFlyers')}</h2>
                   </div>
                   <Link href={`/${locale}/flyers`}>
-                    <Button variant="outline">
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
                       {tCommon('showAll')}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </Link>
                 </div>
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                   {recentFlyers.map((flyer: {
                     id: string;
                     title: string;
@@ -250,8 +250,8 @@ export default async function HomePage({ params }: HomePageProps) {
 
             {/* Top 2 Retailers with Offers */}
             {topRetailersWithOffers.length > 0 && (
-              <section className="py-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <section className="py-4 px-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                   {topRetailersWithOffers.slice(0, 2).map((retailer: {
                     id: string;
                     name: string;
@@ -303,7 +303,7 @@ export default async function HomePage({ params }: HomePageProps) {
                           </Button>
                         </Link>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 flex-1">
+                      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-2 flex-1">
                         {retailer.offers.slice(0, 8).map((offer: {
                           id: string;
                           productName: string;
@@ -342,20 +342,20 @@ export default async function HomePage({ params }: HomePageProps) {
 
             {/* Top Offers */}
             {topOffers.length > 0 && (
-              <section className="py-4">
-                <div className="flex items-center justify-between mb-6">
+              <section className="py-4 px-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 md:mb-6">
                   <div className="flex items-center gap-2">
-                    <Tag className="h-6 w-6" />
-                    <h2 className="text-2xl font-bold">{t('topOffers')}</h2>
+                    <Tag className="h-5 w-5 md:h-6 md:w-6" />
+                    <h2 className="text-xl md:text-2xl font-bold">{t('topOffers')}</h2>
                   </div>
                   <Link href={`/${locale}/offers`}>
-                    <Button variant="outline">
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
                       {tCommon('showAll')}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </Link>
                 </div>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
                   {topOffers.map((offer: {
                     id: string;
                     productName: string;
@@ -391,20 +391,20 @@ export default async function HomePage({ params }: HomePageProps) {
 
             {/* Top Retailers */}
             {topRetailers.length > 0 && (
-              <section className="py-4">
-                <div className="flex items-center justify-between mb-6">
+              <section className="py-4 px-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 md:mb-6">
                   <div className="flex items-center gap-2">
-                    <Store className="h-6 w-6" />
-                    <h2 className="text-2xl font-bold">{tCommon('retailers')}</h2>
+                    <Store className="h-5 w-5 md:h-6 md:w-6" />
+                    <h2 className="text-xl md:text-2xl font-bold">{tCommon('retailers')}</h2>
                   </div>
                   <Link href={`/${locale}/retailers`}>
-                    <Button variant="outline">
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
                       {tCommon('showAll')}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </Link>
                 </div>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
                   {topRetailers.map((retailer: {
                     id: string;
                     name: string;

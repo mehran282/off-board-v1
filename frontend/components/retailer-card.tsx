@@ -62,36 +62,36 @@ export function RetailerCard({
   return (
     <Link href={`/${locale}/retailers/${id}`}>
       <Card className="h-full w-full hover:shadow-lg transition-shadow cursor-pointer overflow-hidden !py-0">
-        <CardHeader className="p-1.5">
-          <div className="flex flex-col items-center gap-1 text-center">
-            <Avatar className="h-8 w-8">
+        <CardHeader className="p-2 sm:p-3">
+          <div className="flex flex-col items-center gap-1.5 sm:gap-2 text-center">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
               <AvatarImage src={logoUrl || undefined} alt={name} />
-              <AvatarFallback className={`text-[10px] text-white ${avatarColor}`}>
+              <AvatarFallback className={`text-xs sm:text-sm text-white ${avatarColor}`}>
                 {name.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <h3 className="font-semibold text-xs line-clamp-2">{name}</h3>
-            <Badge variant="secondary" className="text-[8px] px-1 py-0">
+            <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 px-1">{name}</h3>
+            <Badge variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5">
               {category}
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="p-1.5 pt-0">
-          <div className="grid grid-cols-3 gap-1 text-center">
+        <CardContent className="p-2 sm:p-3 pt-0">
+          <div className="grid grid-cols-3 gap-1 sm:gap-2 text-center">
             <div>
-              <FileText className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
-              <p className="text-[10px] font-semibold">{flyersCount}</p>
-              <p className="text-[8px] text-muted-foreground">{t('flyers')}</p>
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4 mx-auto mb-0.5 sm:mb-1 text-muted-foreground" />
+              <p className="text-xs sm:text-sm font-semibold">{flyersCount}</p>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground">{t('flyers')}</p>
             </div>
             <div>
-              <Tag className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
-              <p className="text-[10px] font-semibold">{offersCount}</p>
-              <p className="text-[8px] text-muted-foreground">{t('offers')}</p>
+              <Tag className="h-3 w-3 sm:h-4 sm:w-4 mx-auto mb-0.5 sm:mb-1 text-muted-foreground" />
+              <p className="text-xs sm:text-sm font-semibold">{offersCount}</p>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground">{t('offers')}</p>
             </div>
             <div>
-              <Store className="h-3 w-3 mx-auto mb-0.5 text-muted-foreground" />
-              <p className="text-[10px] font-semibold">{storesCount}</p>
-              <p className="text-[8px] text-muted-foreground">{t('stores')}</p>
+              <Store className="h-3 w-3 sm:h-4 sm:w-4 mx-auto mb-0.5 sm:mb-1 text-muted-foreground" />
+              <p className="text-xs sm:text-sm font-semibold">{storesCount}</p>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground">{t('stores')}</p>
             </div>
           </div>
         </CardContent>

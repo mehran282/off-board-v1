@@ -91,24 +91,24 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 container py-8 px-4">
-        <div className="flex items-center gap-2 mb-6">
-          <Search className="h-6 w-6" />
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+      <main className="flex-1 container py-4 md:py-8 px-2 sm:px-4">
+        <div className="flex items-center gap-2 mb-4 md:mb-6">
+          <Search className="h-5 w-5 md:h-6 md:w-6" />
+          <h1 className="text-2xl md:text-3xl font-bold">{t('title')}</h1>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-4 md:mb-6">
           <SearchBar />
         </div>
 
         {query && (
-          <p className="text-muted-foreground mb-6">
+          <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6 px-2">
             {offers.length} {offers.length === 1 ? t('result') : t('results')} {t('for')} &quot;{query}&quot;
           </p>
         )}
 
         {offers.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
             {(offers as unknown as Array<{
               id: string;
               productName: string;

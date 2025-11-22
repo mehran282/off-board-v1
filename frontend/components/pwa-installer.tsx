@@ -36,7 +36,7 @@ export function PWAInstaller() {
     // Check if app is already installed (multiple methods for different platforms)
     const checkIfInstalled = () => {
       // Method 1: Check display mode (works for most browsers)
-      if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
         return true;
       }
       
@@ -88,7 +88,7 @@ export function PWAInstaller() {
 
     // Show button by default (only if not installed)
     if (!checkIfInstalled()) {
-      setShowInstallButton(true);
+    setShowInstallButton(true);
     }
 
     // Listen for beforeinstallprompt event
@@ -97,10 +97,10 @@ export function PWAInstaller() {
       // This prevents the warning about preventDefault() without prompt()
       const beforeInstallPrompt = e as any;
       if (beforeInstallPrompt && typeof beforeInstallPrompt.prompt === 'function') {
-        e.preventDefault();
+      e.preventDefault();
         setDeferredPrompt(beforeInstallPrompt);
         deferredPromptRef.current = beforeInstallPrompt;
-        console.log('beforeinstallprompt event received');
+      console.log('beforeinstallprompt event received');
       }
     };
 

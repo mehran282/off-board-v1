@@ -41,8 +41,8 @@ export function Footer() {
   return (
     <footer className="border-t bg-muted/50">
       <div className="w-full flex justify-center">
-        <div className="w-full max-w-[60%] py-8 px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="w-full max-w-full lg:max-w-[60%] py-6 md:py-8 px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             <div>
               <h3 className="font-semibold mb-4">{t('about')}</h3>
               <p className="text-sm text-muted-foreground">
@@ -91,14 +91,14 @@ export function Footer() {
             </div>
           </div>
           {/* Temporary Scraper Button */}
-          <div className="mt-6 pt-6 border-t">
+          <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t">
             <div className="flex flex-col items-center gap-2">
               <Button
                 onClick={handleRunScraper}
                 disabled={isScraping}
                 variant="outline"
                 size="sm"
-                className="w-full max-w-xs"
+                className="w-full sm:max-w-xs"
               >
                 {isScraping ? (
                   <>
@@ -119,7 +119,7 @@ export function Footer() {
               )}
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+          <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t text-center text-xs sm:text-sm text-muted-foreground px-4">
             <p>&copy; {new Date().getFullYear()} off-board. {t('rights')}</p>
           </div>
         </div>

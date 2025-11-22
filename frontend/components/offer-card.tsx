@@ -63,54 +63,54 @@ export function OfferCard({
                 alt={productName}
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs sm:text-sm">
                 {t('noImage')}
               </div>
             )}
             {discountPercentage && discountPercentage > 0 && (
               <Badge
-                className="absolute top-1 right-1 bg-destructive text-destructive-foreground text-xs px-1.5 py-0.5"
+                className="absolute top-1 right-1 bg-destructive text-destructive-foreground text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5"
                 variant="destructive"
               >
                 -{Math.round(discountPercentage)}%
               </Badge>
             )}
           </div>
-        <CardContent className="p-1.5">
-          <div className="space-y-0.5">
+        <CardContent className="p-1.5 sm:p-2">
+          <div className="space-y-0.5 sm:space-y-1">
             {brand && (
-              <p className="text-[10px] text-muted-foreground">{brand}</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{brand}</p>
             )}
-            <h3 className="font-semibold text-xs line-clamp-2">{productName}</h3>
+            <h3 className="font-semibold text-xs sm:text-sm line-clamp-2 min-h-[2.5em]">{productName}</h3>
             <div className="flex items-center gap-1 flex-wrap">
               {oldPrice && oldPrice > currentPrice && (
-                <span className="text-[10px] text-muted-foreground line-through">
+                <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
                   {formatPrice(oldPrice)}
                 </span>
               )}
-              <span className="text-base font-bold">{formatPrice(currentPrice)}</span>
+              <span className="text-sm sm:text-base font-bold">{formatPrice(currentPrice)}</span>
             </div>
-            <div className="flex items-center gap-1 pt-0.5">
-              <Avatar className="h-3 w-3">
+            <div className="flex items-center gap-1 pt-0.5 sm:pt-1">
+              <Avatar className="h-3 w-3 sm:h-4 sm:w-4">
                 <AvatarImage src={retailer.logoUrl || undefined} alt={retailer.name} />
-                <AvatarFallback className="text-[7px]">
+                <AvatarFallback className="text-[7px] sm:text-[9px]">
                   {retailer.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-[10px] text-muted-foreground">{retailer.name}</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground truncate">{retailer.name}</span>
             </div>
             {validUntil && (
-              <p className="text-[9px] text-muted-foreground">
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground">
                 {t('validUntil')}: {formatDate(validUntil)}
               </p>
             )}
           </div>
         </CardContent>
-        <CardFooter className="p-1.5 pt-0">
-          <span className="text-[10px] text-primary font-medium">{tCommon('details')} →</span>
+        <CardFooter className="p-1.5 sm:p-2 pt-0">
+          <span className="text-[10px] sm:text-xs text-primary font-medium">{tCommon('details')} →</span>
         </CardFooter>
       </Card>
     </Link>

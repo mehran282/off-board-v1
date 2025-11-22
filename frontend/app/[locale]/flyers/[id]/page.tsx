@@ -91,53 +91,53 @@ export default async function FlyerDetailPage({ params }: FlyerDetailPageProps) 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 container py-8 px-4">
+      <main className="flex-1 container py-4 md:py-8 px-2 sm:px-4">
         <Link href={`/${locale}/flyers`}>
-          <Button variant="ghost" className="mb-4">
+          <Button variant="ghost" className="mb-4" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('backToFlyers')}
           </Button>
         </Link>
 
-        <div className="bg-card border rounded-lg p-6 mb-8">
-          <div className="flex items-start gap-4 mb-4">
-            <Avatar className="h-16 w-16">
+        <div className="bg-card border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4">
+            <Avatar className="h-12 w-12 sm:h-16 sm:w-16">
               <AvatarImage src={flyer.retailer.logoUrl || undefined} alt={flyer.retailer.name} />
-              <AvatarFallback className="text-xl">{flyer.retailer.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="text-base sm:text-xl">{flyer.retailer.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2">{flyer.title}</h1>
-              <p className="text-lg text-muted-foreground">{flyer.retailer.name}</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 break-words">{flyer.title}</h1>
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground truncate">{flyer.retailer.name}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
+              <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('validFrom')}</p>
-                <p className="font-semibold">{formatDate(flyer.validFrom)}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('validFrom')}</p>
+                <p className="text-sm sm:text-base font-semibold">{formatDate(flyer.validFrom)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
+              <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('validUntil')}</p>
-                <p className="font-semibold">{formatDate(flyer.validUntil)}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('validUntil')}</p>
+                <p className="text-sm sm:text-base font-semibold">{formatDate(flyer.validUntil)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-muted-foreground" />
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('pages')}</p>
-                <p className="font-semibold">{flyer.pages}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('pages')}</p>
+                <p className="text-sm sm:text-base font-semibold">{flyer.pages}</p>
               </div>
             </div>
           </div>
 
           {flyer.pdfUrl && (
             <Link href={flyer.pdfUrl} target="_blank" rel="noopener noreferrer">
-              <Button>
+              <Button size="sm" className="w-full sm:w-auto">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 {t('openPdf')}
               </Button>
@@ -147,10 +147,10 @@ export default async function FlyerDetailPage({ params }: FlyerDetailPageProps) 
 
         {flyer.offers.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
               {t('offersInFlyer')} ({flyer.offers.length})
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
               {flyer.offers.map((offer: {
                 id: string;
                 productName: string;

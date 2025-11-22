@@ -87,39 +87,39 @@ export function FlyerCard({
             <FileText className="h-12 w-12 text-muted-foreground/50" />
           </div>
         )}
-        <CardHeader className="p-3">
+        <CardHeader className="p-2 sm:p-3">
           <div className="flex items-center gap-2 mb-2">
-            <Avatar className="h-8 w-8">
+            <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
               <AvatarImage src={retailer.logoUrl || undefined} alt={retailer.name} />
-              <AvatarFallback className="text-xs">{retailer.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="text-[10px] sm:text-xs">{retailer.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm truncate">{title}</h3>
-              <p className="text-xs text-muted-foreground truncate">{retailer.name}</p>
+              <h3 className="font-semibold text-xs sm:text-sm truncate">{title}</h3>
+              <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{retailer.name}</p>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-3 pt-0">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Calendar className="h-3 w-3" />
+        <CardContent className="p-2 sm:p-3 pt-0">
+          <div className="space-y-1 sm:space-y-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-muted-foreground">
+              <Calendar className="h-3 w-3 flex-shrink-0" />
               <span className="truncate">
                 {formatDate(validFrom)} - {formatDate(validUntil)}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <FileText className="h-3 w-3" />
+            <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-muted-foreground">
+              <FileText className="h-3 w-3 flex-shrink-0" />
               <span>{pages} {t('pages')}</span>
             </div>
             {offersCount > 0 && (
-              <Badge variant="secondary" className="text-xs px-1.5 py-0">
+              <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 py-0">
                 {offersCount} {t('offersCount')}
               </Badge>
             )}
           </div>
         </CardContent>
-        <CardFooter className="p-3 pt-0">
-          <span className="text-xs text-primary font-medium">{tCommon('details')} →</span>
+        <CardFooter className="p-2 sm:p-3 pt-0">
+          <span className="text-[10px] sm:text-xs text-primary font-medium">{tCommon('details')} →</span>
         </CardFooter>
       </Card>
     </Link>

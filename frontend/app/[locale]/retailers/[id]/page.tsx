@@ -116,60 +116,60 @@ export default async function RetailerDetailPage({
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 container py-8 px-4">
+      <main className="flex-1 container py-4 md:py-8 px-2 sm:px-4">
         <Link href={`/${locale}/retailers`}>
-          <Button variant="ghost" className="mb-4">
+          <Button variant="ghost" className="mb-4" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('backToRetailers')}
           </Button>
         </Link>
 
-        <div className="bg-card border rounded-lg p-6 mb-8">
-          <div className="flex items-start gap-4 mb-4">
-            <Avatar className="h-20 w-20">
+        <div className="bg-card border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4">
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20">
               <AvatarImage src={retailer.logoUrl || undefined} alt={retailer.name} />
-              <AvatarFallback className="text-2xl">{retailer.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="text-xl sm:text-2xl">{retailer.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2">{retailer.name}</h1>
-              <Badge variant="secondary" className="text-base">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 break-words">{retailer.name}</h1>
+              <Badge variant="secondary" className="text-xs sm:text-sm md:text-base">
                 {retailer.category}
               </Badge>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-muted-foreground" />
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('flyers')}</p>
-                <p className="font-semibold">{retailer._count.flyers}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('flyers')}</p>
+                <p className="text-sm sm:text-base font-semibold">{retailer._count.flyers}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Tag className="h-5 w-5 text-muted-foreground" />
+              <Tag className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('offers')}</p>
-                <p className="font-semibold">{retailer._count.offers}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('offers')}</p>
+                <p className="text-sm sm:text-base font-semibold">{retailer._count.offers}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-muted-foreground" />
+              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('stores')}</p>
-                <p className="font-semibold">{retailer._count.stores}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('stores')}</p>
+                <p className="text-sm sm:text-base font-semibold">{retailer._count.stores}</p>
               </div>
             </div>
           </div>
         </div>
 
         {retailer.stores.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              <MapPin className="h-6 w-6" />
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 flex items-center gap-2">
+              <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
               {t('storeLocations')} ({retailer.stores.length})
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {retailer.stores.map((store: {
                 id: string;
                 address: string;
@@ -177,13 +177,13 @@ export default async function RetailerDetailPage({
                 postalCode: string;
                 phone: string | null;
               }) => (
-                <div key={store.id} className="border rounded-lg p-4">
-                  <p className="font-semibold mb-1">{store.address}</p>
-                  <p className="text-sm text-muted-foreground">
+                <div key={store.id} className="border rounded-lg p-3 sm:p-4">
+                  <p className="text-sm sm:text-base font-semibold mb-1 break-words">{store.address}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {store.postalCode} {store.city}
                   </p>
                   {store.phone && (
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                       {t('phone')}: {store.phone}
                     </p>
                   )}
@@ -194,17 +194,19 @@ export default async function RetailerDetailPage({
         )}
 
         {retailer.flyers.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold flex items-center gap-2">
-                <FileText className="h-6 w-6" />
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+                <FileText className="h-5 w-5 sm:h-6 sm:w-6" />
                 {t('flyers')} ({retailer._count.flyers})
               </h2>
               <Link href={`/${locale}/flyers?retailerId=${retailer.id}`}>
-                <Button variant="outline">{tCommon('showAll')}</Button>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                  {tCommon('showAll')}
+                </Button>
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
               {retailer.flyers.map((flyer: {
                 id: string;
                 title: string;
@@ -237,16 +239,18 @@ export default async function RetailerDetailPage({
 
         {retailer.offers.length > 0 && (
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold flex items-center gap-2">
-                <Tag className="h-6 w-6" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-3 sm:mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+                <Tag className="h-5 w-5 sm:h-6 sm:w-6" />
                 {t('offers')} ({retailer._count.offers})
               </h2>
               <Link href={`/${locale}/offers?retailerId=${retailer.id}`}>
-                <Button variant="outline">{tCommon('showAll')}</Button>
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                  {tCommon('showAll')}
+                </Button>
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
               {retailer.offers.map((offer: {
                 id: string;
                 productName: string;

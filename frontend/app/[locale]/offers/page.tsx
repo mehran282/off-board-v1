@@ -143,21 +143,21 @@ export default async function OffersPage({ params, searchParams }: OffersPagePro
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 container py-8 px-4">
-        <div className="flex items-center gap-2 mb-6">
-          <Tag className="h-6 w-6" />
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
+      <main className="flex-1 container py-4 md:py-8 px-2 sm:px-4">
+        <div className="flex items-center gap-2 mb-4 md:mb-6">
+          <Tag className="h-5 w-5 md:h-6 md:w-6" />
+          <h1 className="text-2xl md:text-3xl font-bold">{t('title')}</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <aside className="lg:col-span-1">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
+          <aside className="lg:col-span-1 order-2 lg:order-1">
             <FilterPanel categories={categories} retailers={retailers} />
           </aside>
 
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 order-1 lg:order-2">
             {offers.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3 mb-4 md:mb-6">
                   {offers.map((offer: {
                     id: string;
                     productName: string;

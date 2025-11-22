@@ -56,7 +56,7 @@ export function FilterPanel({ categories = [], retailers = [] }: FilterPanelProp
   const hasActiveFilters = selectedCategory || selectedRetailer || minDiscount;
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-card">
+    <div className="space-y-3 md:space-y-4 p-3 md:p-4 border rounded-lg bg-card">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">{t('title')}</h3>
         {hasActiveFilters && (
