@@ -23,6 +23,8 @@ class Offer(BaseModel):
     url = Column(String, unique=True, nullable=False, index=True)
     imageUrl = Column(String, nullable=True)
     validUntil = Column(DateTime, nullable=True, index=True)
+    validFrom = Column(DateTime, nullable=True)
+    description = Column(String, nullable=True)
     contentId = Column(String, nullable=True, index=True)
     parentContentId = Column(String, nullable=True, index=True)
     pageNumber = Column(Integer, nullable=True)
@@ -33,8 +35,6 @@ class Offer(BaseModel):
     priceConditions = Column(String, nullable=True)  # JSON string
     imageAlt = Column(String, nullable=True)
     imageTitle = Column(String, nullable=True)
-    description = Column(String, nullable=True)
-    validFrom = Column(DateTime, nullable=True)
     scrapedAt = Column(DateTime, default=lambda: datetime.now(UTC), nullable=False)
 
     # Relationships

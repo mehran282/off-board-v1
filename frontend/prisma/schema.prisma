@@ -24,25 +24,29 @@ model Retailer {
 }
 
 model Flyer {
-  id           String   @id @default(cuid())
-  retailerId   String
-  title        String
-  pages        Int
-  validFrom    DateTime
-  validUntil   DateTime
-  url          String   @unique
-  pdfUrl       String?
-  scrapedAt    DateTime @default(now())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  thumbnailUrl String?
-  retailer     Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
-  offers       Offer[]
+  id            String    @id @default(cuid())
+  retailerId    String
+  title         String
+  pages         Int
+  validFrom     DateTime
+  validUntil    DateTime
+  url           String    @unique
+  pdfUrl        String?
+  scrapedAt     DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  thumbnailUrl  String?
+  contentId     String?
+  publishedFrom DateTime?
+  publishedUntil DateTime?
+  retailer      Retailer  @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+  offers        Offer[]
 
   @@index([retailerId])
   @@index([validFrom])
   @@index([validUntil])
   @@index([url])
+  @@index([contentId])
 }
 
 model Store {
@@ -99,6 +103,18 @@ model Offer {
   url                String    @unique
   imageUrl           String?
   validUntil         DateTime?
+  validFrom          DateTime?
+  description        String?
+  contentId          String?
+  parentContentId    String?
+  pageNumber         Int?
+  publisherId        String?
+  priceFormatted     String?
+  oldPriceFormatted  String?
+  priceFrequency     String?
+  priceConditions    String?   // JSON string
+  imageAlt           String?
+  imageTitle         String?
   scrapedAt          DateTime  @default(now())
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
@@ -113,6 +129,8 @@ model Offer {
   @@index([currentPrice])
   @@index([validUntil])
   @@index([url])
+  @@index([contentId])
+  @@index([parentContentId])
 }
 
 model ScrapingLog {

@@ -100,7 +100,10 @@ export const FlyerScalarFieldEnum = {
   scrapedAt: 'scrapedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  thumbnailUrl: 'thumbnailUrl'
+  thumbnailUrl: 'thumbnailUrl',
+  contentId: 'contentId',
+  publishedFrom: 'publishedFrom',
+  publishedUntil: 'publishedUntil'
 } as const
 
 export type FlyerScalarFieldEnum = (typeof FlyerScalarFieldEnum)[keyof typeof FlyerScalarFieldEnum]
@@ -155,6 +158,18 @@ export const OfferScalarFieldEnum = {
   url: 'url',
   imageUrl: 'imageUrl',
   validUntil: 'validUntil',
+  validFrom: 'validFrom',
+  description: 'description',
+  contentId: 'contentId',
+  parentContentId: 'parentContentId',
+  pageNumber: 'pageNumber',
+  publisherId: 'publisherId',
+  priceFormatted: 'priceFormatted',
+  oldPriceFormatted: 'oldPriceFormatted',
+  priceFrequency: 'priceFrequency',
+  priceConditions: 'priceConditions',
+  imageAlt: 'imageAlt',
+  imageTitle: 'imageTitle',
   scrapedAt: 'scrapedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

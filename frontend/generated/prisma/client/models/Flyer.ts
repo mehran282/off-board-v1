@@ -47,6 +47,9 @@ export type FlyerMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   thumbnailUrl: string | null
+  contentId: string | null
+  publishedFrom: Date | null
+  publishedUntil: Date | null
 }
 
 export type FlyerMaxAggregateOutputType = {
@@ -62,6 +65,9 @@ export type FlyerMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   thumbnailUrl: string | null
+  contentId: string | null
+  publishedFrom: Date | null
+  publishedUntil: Date | null
 }
 
 export type FlyerCountAggregateOutputType = {
@@ -77,6 +83,9 @@ export type FlyerCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   thumbnailUrl: number
+  contentId: number
+  publishedFrom: number
+  publishedUntil: number
   _all: number
 }
 
@@ -102,6 +111,9 @@ export type FlyerMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   thumbnailUrl?: true
+  contentId?: true
+  publishedFrom?: true
+  publishedUntil?: true
 }
 
 export type FlyerMaxAggregateInputType = {
@@ -117,6 +129,9 @@ export type FlyerMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   thumbnailUrl?: true
+  contentId?: true
+  publishedFrom?: true
+  publishedUntil?: true
 }
 
 export type FlyerCountAggregateInputType = {
@@ -132,6 +147,9 @@ export type FlyerCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   thumbnailUrl?: true
+  contentId?: true
+  publishedFrom?: true
+  publishedUntil?: true
   _all?: true
 }
 
@@ -234,6 +252,9 @@ export type FlyerGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   thumbnailUrl: string | null
+  contentId: string | null
+  publishedFrom: Date | null
+  publishedUntil: Date | null
   _count: FlyerCountAggregateOutputType | null
   _avg: FlyerAvgAggregateOutputType | null
   _sum: FlyerSumAggregateOutputType | null
@@ -272,6 +293,9 @@ export type FlyerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Flyer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Flyer"> | Date | string
   thumbnailUrl?: Prisma.StringNullableFilter<"Flyer"> | string | null
+  contentId?: Prisma.StringNullableFilter<"Flyer"> | string | null
+  publishedFrom?: Prisma.DateTimeNullableFilter<"Flyer"> | Date | string | null
+  publishedUntil?: Prisma.DateTimeNullableFilter<"Flyer"> | Date | string | null
   retailer?: Prisma.XOR<Prisma.RetailerScalarRelationFilter, Prisma.RetailerWhereInput>
   offers?: Prisma.OfferListRelationFilter
 }
@@ -289,6 +313,9 @@ export type FlyerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   retailer?: Prisma.RetailerOrderByWithRelationInput
   offers?: Prisma.OfferOrderByRelationAggregateInput
 }
@@ -309,6 +336,9 @@ export type FlyerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Flyer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Flyer"> | Date | string
   thumbnailUrl?: Prisma.StringNullableFilter<"Flyer"> | string | null
+  contentId?: Prisma.StringNullableFilter<"Flyer"> | string | null
+  publishedFrom?: Prisma.DateTimeNullableFilter<"Flyer"> | Date | string | null
+  publishedUntil?: Prisma.DateTimeNullableFilter<"Flyer"> | Date | string | null
   retailer?: Prisma.XOR<Prisma.RetailerScalarRelationFilter, Prisma.RetailerWhereInput>
   offers?: Prisma.OfferListRelationFilter
 }, "id" | "url">
@@ -326,6 +356,9 @@ export type FlyerOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.FlyerCountOrderByAggregateInput
   _avg?: Prisma.FlyerAvgOrderByAggregateInput
   _max?: Prisma.FlyerMaxOrderByAggregateInput
@@ -349,6 +382,9 @@ export type FlyerScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Flyer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Flyer"> | Date | string
   thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"Flyer"> | string | null
+  contentId?: Prisma.StringNullableWithAggregatesFilter<"Flyer"> | string | null
+  publishedFrom?: Prisma.DateTimeNullableWithAggregatesFilter<"Flyer"> | Date | string | null
+  publishedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Flyer"> | Date | string | null
 }
 
 export type FlyerCreateInput = {
@@ -363,6 +399,9 @@ export type FlyerCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
   retailer: Prisma.RetailerCreateNestedOneWithoutFlyersInput
   offers?: Prisma.OfferCreateNestedManyWithoutFlyerInput
 }
@@ -380,6 +419,9 @@ export type FlyerUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutFlyerInput
 }
 
@@ -395,6 +437,9 @@ export type FlyerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retailer?: Prisma.RetailerUpdateOneRequiredWithoutFlyersNestedInput
   offers?: Prisma.OfferUpdateManyWithoutFlyerNestedInput
 }
@@ -412,6 +457,9 @@ export type FlyerUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offers?: Prisma.OfferUncheckedUpdateManyWithoutFlyerNestedInput
 }
 
@@ -428,6 +476,9 @@ export type FlyerCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
 }
 
 export type FlyerUpdateManyMutationInput = {
@@ -442,6 +493,9 @@ export type FlyerUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type FlyerUncheckedUpdateManyInput = {
@@ -457,6 +511,9 @@ export type FlyerUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type FlyerListRelationFilter = {
@@ -482,6 +539,9 @@ export type FlyerCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
+  contentId?: Prisma.SortOrder
+  publishedFrom?: Prisma.SortOrder
+  publishedUntil?: Prisma.SortOrder
 }
 
 export type FlyerAvgOrderByAggregateInput = {
@@ -501,6 +561,9 @@ export type FlyerMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
+  contentId?: Prisma.SortOrder
+  publishedFrom?: Prisma.SortOrder
+  publishedUntil?: Prisma.SortOrder
 }
 
 export type FlyerMinOrderByAggregateInput = {
@@ -516,6 +579,9 @@ export type FlyerMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
+  contentId?: Prisma.SortOrder
+  publishedFrom?: Prisma.SortOrder
+  publishedUntil?: Prisma.SortOrder
 }
 
 export type FlyerSumOrderByAggregateInput = {
@@ -577,6 +643,10 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type FlyerCreateNestedOneWithoutOffersInput = {
   create?: Prisma.XOR<Prisma.FlyerCreateWithoutOffersInput, Prisma.FlyerUncheckedCreateWithoutOffersInput>
   connectOrCreate?: Prisma.FlyerCreateOrConnectWithoutOffersInput
@@ -605,6 +675,9 @@ export type FlyerCreateWithoutRetailerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
   offers?: Prisma.OfferCreateNestedManyWithoutFlyerInput
 }
 
@@ -620,6 +693,9 @@ export type FlyerUncheckedCreateWithoutRetailerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutFlyerInput
 }
 
@@ -665,6 +741,9 @@ export type FlyerScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Flyer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Flyer"> | Date | string
   thumbnailUrl?: Prisma.StringNullableFilter<"Flyer"> | string | null
+  contentId?: Prisma.StringNullableFilter<"Flyer"> | string | null
+  publishedFrom?: Prisma.DateTimeNullableFilter<"Flyer"> | Date | string | null
+  publishedUntil?: Prisma.DateTimeNullableFilter<"Flyer"> | Date | string | null
 }
 
 export type FlyerCreateWithoutOffersInput = {
@@ -679,6 +758,9 @@ export type FlyerCreateWithoutOffersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
   retailer: Prisma.RetailerCreateNestedOneWithoutFlyersInput
 }
 
@@ -695,6 +777,9 @@ export type FlyerUncheckedCreateWithoutOffersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
 }
 
 export type FlyerCreateOrConnectWithoutOffersInput = {
@@ -725,6 +810,9 @@ export type FlyerUpdateWithoutOffersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retailer?: Prisma.RetailerUpdateOneRequiredWithoutFlyersNestedInput
 }
 
@@ -741,6 +829,9 @@ export type FlyerUncheckedUpdateWithoutOffersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type FlyerCreateManyRetailerInput = {
@@ -755,6 +846,9 @@ export type FlyerCreateManyRetailerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   thumbnailUrl?: string | null
+  contentId?: string | null
+  publishedFrom?: Date | string | null
+  publishedUntil?: Date | string | null
 }
 
 export type FlyerUpdateWithoutRetailerInput = {
@@ -769,6 +863,9 @@ export type FlyerUpdateWithoutRetailerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offers?: Prisma.OfferUpdateManyWithoutFlyerNestedInput
 }
 
@@ -784,6 +881,9 @@ export type FlyerUncheckedUpdateWithoutRetailerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   offers?: Prisma.OfferUncheckedUpdateManyWithoutFlyerNestedInput
 }
 
@@ -799,6 +899,9 @@ export type FlyerUncheckedUpdateManyWithoutRetailerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -845,6 +948,9 @@ export type FlyerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   thumbnailUrl?: boolean
+  contentId?: boolean
+  publishedFrom?: boolean
+  publishedUntil?: boolean
   retailer?: boolean | Prisma.RetailerDefaultArgs<ExtArgs>
   offers?: boolean | Prisma.Flyer$offersArgs<ExtArgs>
   _count?: boolean | Prisma.FlyerCountOutputTypeDefaultArgs<ExtArgs>
@@ -863,6 +969,9 @@ export type FlyerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   thumbnailUrl?: boolean
+  contentId?: boolean
+  publishedFrom?: boolean
+  publishedUntil?: boolean
   retailer?: boolean | Prisma.RetailerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["flyer"]>
 
@@ -879,6 +988,9 @@ export type FlyerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   thumbnailUrl?: boolean
+  contentId?: boolean
+  publishedFrom?: boolean
+  publishedUntil?: boolean
   retailer?: boolean | Prisma.RetailerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["flyer"]>
 
@@ -895,9 +1007,12 @@ export type FlyerSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   thumbnailUrl?: boolean
+  contentId?: boolean
+  publishedFrom?: boolean
+  publishedUntil?: boolean
 }
 
-export type FlyerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "retailerId" | "title" | "pages" | "validFrom" | "validUntil" | "url" | "pdfUrl" | "scrapedAt" | "createdAt" | "updatedAt" | "thumbnailUrl", ExtArgs["result"]["flyer"]>
+export type FlyerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "retailerId" | "title" | "pages" | "validFrom" | "validUntil" | "url" | "pdfUrl" | "scrapedAt" | "createdAt" | "updatedAt" | "thumbnailUrl" | "contentId" | "publishedFrom" | "publishedUntil", ExtArgs["result"]["flyer"]>
 export type FlyerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   retailer?: boolean | Prisma.RetailerDefaultArgs<ExtArgs>
   offers?: boolean | Prisma.Flyer$offersArgs<ExtArgs>
@@ -929,6 +1044,9 @@ export type $FlyerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     createdAt: Date
     updatedAt: Date
     thumbnailUrl: string | null
+    contentId: string | null
+    publishedFrom: Date | null
+    publishedUntil: Date | null
   }, ExtArgs["result"]["flyer"]>
   composites: {}
 }
@@ -1366,6 +1484,9 @@ export interface FlyerFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Flyer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Flyer", 'DateTime'>
   readonly thumbnailUrl: Prisma.FieldRef<"Flyer", 'String'>
+  readonly contentId: Prisma.FieldRef<"Flyer", 'String'>
+  readonly publishedFrom: Prisma.FieldRef<"Flyer", 'DateTime'>
+  readonly publishedUntil: Prisma.FieldRef<"Flyer", 'DateTime'>
 }
     
 

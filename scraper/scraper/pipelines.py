@@ -177,7 +177,7 @@ class DatabasePipeline:
                     item_created = result.get("created", False)
                     item_updated = result.get("updated", False)
 
-                session.commit()
+                # Note: commit is handled by get_db_session context manager
                 self.saved_items_count += 1
                 
                 if item_created:
@@ -204,13 +204,15 @@ class DatabasePipeline:
             self.failed_items_count += 1
             item_name = item.get('url') or item.get('name') or item.get('title') or 'unknown'
             spider.logger.warning(f"⚠️  Duplicate/Integrity error for {item_name}: {str(e)[:100]}")
-            session.rollback()
+            # Note: rollback is handled by get_db_session context manager
         except Exception as e:
             self.failed_items_count += 1
             item_name = item.get('url') or item.get('name') or item.get('title') or 'unknown'
             spider.logger.error(f"❌ Error saving {item_name}: {str(e)[:200]}")
-            session.rollback()
-            raise
+            import traceback
+            spider.logger.error(f"❌ Full traceback:\n{traceback.format_exc()}")
+            # Note: rollback is handled by get_db_session context manager
+            # Do not re-raise, allow other items to be processed
 
         return item
 

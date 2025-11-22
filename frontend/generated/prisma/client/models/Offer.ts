@@ -31,6 +31,7 @@ export type OfferAvgAggregateOutputType = {
   oldPrice: number | null
   discount: number | null
   discountPercentage: number | null
+  pageNumber: number | null
 }
 
 export type OfferSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type OfferSumAggregateOutputType = {
   oldPrice: number | null
   discount: number | null
   discountPercentage: number | null
+  pageNumber: number | null
 }
 
 export type OfferMinAggregateOutputType = {
@@ -56,6 +58,18 @@ export type OfferMinAggregateOutputType = {
   url: string | null
   imageUrl: string | null
   validUntil: Date | null
+  validFrom: Date | null
+  description: string | null
+  contentId: string | null
+  parentContentId: string | null
+  pageNumber: number | null
+  publisherId: string | null
+  priceFormatted: string | null
+  oldPriceFormatted: string | null
+  priceFrequency: string | null
+  priceConditions: string | null
+  imageAlt: string | null
+  imageTitle: string | null
   scrapedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -77,6 +91,18 @@ export type OfferMaxAggregateOutputType = {
   url: string | null
   imageUrl: string | null
   validUntil: Date | null
+  validFrom: Date | null
+  description: string | null
+  contentId: string | null
+  parentContentId: string | null
+  pageNumber: number | null
+  publisherId: string | null
+  priceFormatted: string | null
+  oldPriceFormatted: string | null
+  priceFrequency: string | null
+  priceConditions: string | null
+  imageAlt: string | null
+  imageTitle: string | null
   scrapedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -98,6 +124,18 @@ export type OfferCountAggregateOutputType = {
   url: number
   imageUrl: number
   validUntil: number
+  validFrom: number
+  description: number
+  contentId: number
+  parentContentId: number
+  pageNumber: number
+  publisherId: number
+  priceFormatted: number
+  oldPriceFormatted: number
+  priceFrequency: number
+  priceConditions: number
+  imageAlt: number
+  imageTitle: number
   scrapedAt: number
   createdAt: number
   updatedAt: number
@@ -110,6 +148,7 @@ export type OfferAvgAggregateInputType = {
   oldPrice?: true
   discount?: true
   discountPercentage?: true
+  pageNumber?: true
 }
 
 export type OfferSumAggregateInputType = {
@@ -117,6 +156,7 @@ export type OfferSumAggregateInputType = {
   oldPrice?: true
   discount?: true
   discountPercentage?: true
+  pageNumber?: true
 }
 
 export type OfferMinAggregateInputType = {
@@ -135,6 +175,18 @@ export type OfferMinAggregateInputType = {
   url?: true
   imageUrl?: true
   validUntil?: true
+  validFrom?: true
+  description?: true
+  contentId?: true
+  parentContentId?: true
+  pageNumber?: true
+  publisherId?: true
+  priceFormatted?: true
+  oldPriceFormatted?: true
+  priceFrequency?: true
+  priceConditions?: true
+  imageAlt?: true
+  imageTitle?: true
   scrapedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -156,6 +208,18 @@ export type OfferMaxAggregateInputType = {
   url?: true
   imageUrl?: true
   validUntil?: true
+  validFrom?: true
+  description?: true
+  contentId?: true
+  parentContentId?: true
+  pageNumber?: true
+  publisherId?: true
+  priceFormatted?: true
+  oldPriceFormatted?: true
+  priceFrequency?: true
+  priceConditions?: true
+  imageAlt?: true
+  imageTitle?: true
   scrapedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -177,6 +241,18 @@ export type OfferCountAggregateInputType = {
   url?: true
   imageUrl?: true
   validUntil?: true
+  validFrom?: true
+  description?: true
+  contentId?: true
+  parentContentId?: true
+  pageNumber?: true
+  publisherId?: true
+  priceFormatted?: true
+  oldPriceFormatted?: true
+  priceFrequency?: true
+  priceConditions?: true
+  imageAlt?: true
+  imageTitle?: true
   scrapedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -285,6 +361,18 @@ export type OfferGroupByOutputType = {
   url: string
   imageUrl: string | null
   validUntil: Date | null
+  validFrom: Date | null
+  description: string | null
+  contentId: string | null
+  parentContentId: string | null
+  pageNumber: number | null
+  publisherId: string | null
+  priceFormatted: string | null
+  oldPriceFormatted: string | null
+  priceFrequency: string | null
+  priceConditions: string | null
+  imageAlt: string | null
+  imageTitle: string | null
   scrapedAt: Date
   createdAt: Date
   updatedAt: Date
@@ -329,6 +417,18 @@ export type OfferWhereInput = {
   url?: Prisma.StringFilter<"Offer"> | string
   imageUrl?: Prisma.StringNullableFilter<"Offer"> | string | null
   validUntil?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  validFrom?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  description?: Prisma.StringNullableFilter<"Offer"> | string | null
+  contentId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  parentContentId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  pageNumber?: Prisma.IntNullableFilter<"Offer"> | number | null
+  publisherId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceFormatted?: Prisma.StringNullableFilter<"Offer"> | string | null
+  oldPriceFormatted?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceFrequency?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceConditions?: Prisma.StringNullableFilter<"Offer"> | string | null
+  imageAlt?: Prisma.StringNullableFilter<"Offer"> | string | null
+  imageTitle?: Prisma.StringNullableFilter<"Offer"> | string | null
   scrapedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -353,6 +453,18 @@ export type OfferOrderByWithRelationInput = {
   url?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  validFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentContentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pageNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  publisherId?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceFormatted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oldPriceFormatted?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceConditions?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageAlt?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   scrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -380,6 +492,18 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   unitPrice?: Prisma.StringNullableFilter<"Offer"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Offer"> | string | null
   validUntil?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  validFrom?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  description?: Prisma.StringNullableFilter<"Offer"> | string | null
+  contentId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  parentContentId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  pageNumber?: Prisma.IntNullableFilter<"Offer"> | number | null
+  publisherId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceFormatted?: Prisma.StringNullableFilter<"Offer"> | string | null
+  oldPriceFormatted?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceFrequency?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceConditions?: Prisma.StringNullableFilter<"Offer"> | string | null
+  imageAlt?: Prisma.StringNullableFilter<"Offer"> | string | null
+  imageTitle?: Prisma.StringNullableFilter<"Offer"> | string | null
   scrapedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -404,6 +528,18 @@ export type OfferOrderByWithAggregationInput = {
   url?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  validFrom?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  contentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentContentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pageNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  publisherId?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceFormatted?: Prisma.SortOrderInput | Prisma.SortOrder
+  oldPriceFormatted?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  priceConditions?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageAlt?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageTitle?: Prisma.SortOrderInput | Prisma.SortOrder
   scrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -433,6 +569,18 @@ export type OfferScalarWhereWithAggregatesInput = {
   url?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   validUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+  validFrom?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  contentId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  parentContentId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  pageNumber?: Prisma.IntNullableWithAggregatesFilter<"Offer"> | number | null
+  publisherId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  priceFormatted?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  oldPriceFormatted?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  priceFrequency?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  priceConditions?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  imageAlt?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  imageTitle?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   scrapedAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
@@ -451,6 +599,18 @@ export type OfferCreateInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -475,6 +635,18 @@ export type OfferUncheckedCreateInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -493,6 +665,18 @@ export type OfferUpdateInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -517,6 +701,18 @@ export type OfferUncheckedUpdateInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -538,6 +734,18 @@ export type OfferCreateManyInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -556,6 +764,18 @@ export type OfferUpdateManyMutationInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -577,6 +797,18 @@ export type OfferUncheckedUpdateManyInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -608,6 +840,18 @@ export type OfferCountOrderByAggregateInput = {
   url?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
+  validFrom?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  contentId?: Prisma.SortOrder
+  parentContentId?: Prisma.SortOrder
+  pageNumber?: Prisma.SortOrder
+  publisherId?: Prisma.SortOrder
+  priceFormatted?: Prisma.SortOrder
+  oldPriceFormatted?: Prisma.SortOrder
+  priceFrequency?: Prisma.SortOrder
+  priceConditions?: Prisma.SortOrder
+  imageAlt?: Prisma.SortOrder
+  imageTitle?: Prisma.SortOrder
   scrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -618,6 +862,7 @@ export type OfferAvgOrderByAggregateInput = {
   oldPrice?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercentage?: Prisma.SortOrder
+  pageNumber?: Prisma.SortOrder
 }
 
 export type OfferMaxOrderByAggregateInput = {
@@ -636,6 +881,18 @@ export type OfferMaxOrderByAggregateInput = {
   url?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
+  validFrom?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  contentId?: Prisma.SortOrder
+  parentContentId?: Prisma.SortOrder
+  pageNumber?: Prisma.SortOrder
+  publisherId?: Prisma.SortOrder
+  priceFormatted?: Prisma.SortOrder
+  oldPriceFormatted?: Prisma.SortOrder
+  priceFrequency?: Prisma.SortOrder
+  priceConditions?: Prisma.SortOrder
+  imageAlt?: Prisma.SortOrder
+  imageTitle?: Prisma.SortOrder
   scrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -657,6 +914,18 @@ export type OfferMinOrderByAggregateInput = {
   url?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
+  validFrom?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  contentId?: Prisma.SortOrder
+  parentContentId?: Prisma.SortOrder
+  pageNumber?: Prisma.SortOrder
+  publisherId?: Prisma.SortOrder
+  priceFormatted?: Prisma.SortOrder
+  oldPriceFormatted?: Prisma.SortOrder
+  priceFrequency?: Prisma.SortOrder
+  priceConditions?: Prisma.SortOrder
+  imageAlt?: Prisma.SortOrder
+  imageTitle?: Prisma.SortOrder
   scrapedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -667,6 +936,7 @@ export type OfferSumOrderByAggregateInput = {
   oldPrice?: Prisma.SortOrder
   discount?: Prisma.SortOrder
   discountPercentage?: Prisma.SortOrder
+  pageNumber?: Prisma.SortOrder
 }
 
 export type OfferCreateNestedManyWithoutRetailerInput = {
@@ -803,8 +1073,12 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type OfferCreateWithoutRetailerInput = {
@@ -820,6 +1094,18 @@ export type OfferCreateWithoutRetailerInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -842,6 +1128,18 @@ export type OfferUncheckedCreateWithoutRetailerInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -892,6 +1190,18 @@ export type OfferScalarWhereInput = {
   url?: Prisma.StringFilter<"Offer"> | string
   imageUrl?: Prisma.StringNullableFilter<"Offer"> | string | null
   validUntil?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  validFrom?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  description?: Prisma.StringNullableFilter<"Offer"> | string | null
+  contentId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  parentContentId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  pageNumber?: Prisma.IntNullableFilter<"Offer"> | number | null
+  publisherId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceFormatted?: Prisma.StringNullableFilter<"Offer"> | string | null
+  oldPriceFormatted?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceFrequency?: Prisma.StringNullableFilter<"Offer"> | string | null
+  priceConditions?: Prisma.StringNullableFilter<"Offer"> | string | null
+  imageAlt?: Prisma.StringNullableFilter<"Offer"> | string | null
+  imageTitle?: Prisma.StringNullableFilter<"Offer"> | string | null
   scrapedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -910,6 +1220,18 @@ export type OfferCreateWithoutFlyerInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -932,6 +1254,18 @@ export type OfferUncheckedCreateWithoutFlyerInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -976,6 +1310,18 @@ export type OfferCreateWithoutProductInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -998,6 +1344,18 @@ export type OfferUncheckedCreateWithoutProductInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1044,6 +1402,18 @@ export type OfferCreateManyRetailerInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1062,6 +1432,18 @@ export type OfferUpdateWithoutRetailerInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1084,6 +1466,18 @@ export type OfferUncheckedUpdateWithoutRetailerInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1104,6 +1498,18 @@ export type OfferUncheckedUpdateManyWithoutRetailerInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1124,6 +1530,18 @@ export type OfferCreateManyFlyerInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1142,6 +1560,18 @@ export type OfferUpdateWithoutFlyerInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1164,6 +1594,18 @@ export type OfferUncheckedUpdateWithoutFlyerInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1184,6 +1626,18 @@ export type OfferUncheckedUpdateManyWithoutFlyerInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1204,6 +1658,18 @@ export type OfferCreateManyProductInput = {
   url: string
   imageUrl?: string | null
   validUntil?: Date | string | null
+  validFrom?: Date | string | null
+  description?: string | null
+  contentId?: string | null
+  parentContentId?: string | null
+  pageNumber?: number | null
+  publisherId?: string | null
+  priceFormatted?: string | null
+  oldPriceFormatted?: string | null
+  priceFrequency?: string | null
+  priceConditions?: string | null
+  imageAlt?: string | null
+  imageTitle?: string | null
   scrapedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1222,6 +1688,18 @@ export type OfferUpdateWithoutProductInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1244,6 +1722,18 @@ export type OfferUncheckedUpdateWithoutProductInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1264,6 +1754,18 @@ export type OfferUncheckedUpdateManyWithoutProductInput = {
   url?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  validFrom?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentContentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  publisherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oldPriceFormatted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceFrequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priceConditions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   scrapedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1287,6 +1789,18 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   url?: boolean
   imageUrl?: boolean
   validUntil?: boolean
+  validFrom?: boolean
+  description?: boolean
+  contentId?: boolean
+  parentContentId?: boolean
+  pageNumber?: boolean
+  publisherId?: boolean
+  priceFormatted?: boolean
+  oldPriceFormatted?: boolean
+  priceFrequency?: boolean
+  priceConditions?: boolean
+  imageAlt?: boolean
+  imageTitle?: boolean
   scrapedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1311,6 +1825,18 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   url?: boolean
   imageUrl?: boolean
   validUntil?: boolean
+  validFrom?: boolean
+  description?: boolean
+  contentId?: boolean
+  parentContentId?: boolean
+  pageNumber?: boolean
+  publisherId?: boolean
+  priceFormatted?: boolean
+  oldPriceFormatted?: boolean
+  priceFrequency?: boolean
+  priceConditions?: boolean
+  imageAlt?: boolean
+  imageTitle?: boolean
   scrapedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1335,6 +1861,18 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   url?: boolean
   imageUrl?: boolean
   validUntil?: boolean
+  validFrom?: boolean
+  description?: boolean
+  contentId?: boolean
+  parentContentId?: boolean
+  pageNumber?: boolean
+  publisherId?: boolean
+  priceFormatted?: boolean
+  oldPriceFormatted?: boolean
+  priceFrequency?: boolean
+  priceConditions?: boolean
+  imageAlt?: boolean
+  imageTitle?: boolean
   scrapedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1359,12 +1897,24 @@ export type OfferSelectScalar = {
   url?: boolean
   imageUrl?: boolean
   validUntil?: boolean
+  validFrom?: boolean
+  description?: boolean
+  contentId?: boolean
+  parentContentId?: boolean
+  pageNumber?: boolean
+  publisherId?: boolean
+  priceFormatted?: boolean
+  oldPriceFormatted?: boolean
+  priceFrequency?: boolean
+  priceConditions?: boolean
+  imageAlt?: boolean
+  imageTitle?: boolean
   scrapedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "flyerId" | "productId" | "retailerId" | "productName" | "brand" | "category" | "currentPrice" | "oldPrice" | "discount" | "discountPercentage" | "unitPrice" | "url" | "imageUrl" | "validUntil" | "scrapedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "flyerId" | "productId" | "retailerId" | "productName" | "brand" | "category" | "currentPrice" | "oldPrice" | "discount" | "discountPercentage" | "unitPrice" | "url" | "imageUrl" | "validUntil" | "validFrom" | "description" | "contentId" | "parentContentId" | "pageNumber" | "publisherId" | "priceFormatted" | "oldPriceFormatted" | "priceFrequency" | "priceConditions" | "imageAlt" | "imageTitle" | "scrapedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   flyer?: boolean | Prisma.Offer$flyerArgs<ExtArgs>
   product?: boolean | Prisma.Offer$productArgs<ExtArgs>
@@ -1404,6 +1954,18 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     url: string
     imageUrl: string | null
     validUntil: Date | null
+    validFrom: Date | null
+    description: string | null
+    contentId: string | null
+    parentContentId: string | null
+    pageNumber: number | null
+    publisherId: string | null
+    priceFormatted: string | null
+    oldPriceFormatted: string | null
+    priceFrequency: string | null
+    priceConditions: string | null
+    imageAlt: string | null
+    imageTitle: string | null
     scrapedAt: Date
     createdAt: Date
     updatedAt: Date
@@ -1848,6 +2410,18 @@ export interface OfferFieldRefs {
   readonly url: Prisma.FieldRef<"Offer", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Offer", 'String'>
   readonly validUntil: Prisma.FieldRef<"Offer", 'DateTime'>
+  readonly validFrom: Prisma.FieldRef<"Offer", 'DateTime'>
+  readonly description: Prisma.FieldRef<"Offer", 'String'>
+  readonly contentId: Prisma.FieldRef<"Offer", 'String'>
+  readonly parentContentId: Prisma.FieldRef<"Offer", 'String'>
+  readonly pageNumber: Prisma.FieldRef<"Offer", 'Int'>
+  readonly publisherId: Prisma.FieldRef<"Offer", 'String'>
+  readonly priceFormatted: Prisma.FieldRef<"Offer", 'String'>
+  readonly oldPriceFormatted: Prisma.FieldRef<"Offer", 'String'>
+  readonly priceFrequency: Prisma.FieldRef<"Offer", 'String'>
+  readonly priceConditions: Prisma.FieldRef<"Offer", 'String'>
+  readonly imageAlt: Prisma.FieldRef<"Offer", 'String'>
+  readonly imageTitle: Prisma.FieldRef<"Offer", 'String'>
   readonly scrapedAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Offer", 'DateTime'>
