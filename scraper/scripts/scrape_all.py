@@ -49,18 +49,50 @@ def main():
         process.crawl("offers")
 
         # Start crawling
+        print("\n" + "=" * 80)
+        print("🚀 Starting scraping process...")
+        print("=" * 80 + "\n")
         process.start()
 
-        # Update log with final status
+        # Get final statistics
         with get_db_session() as session:
             log = session.query(ScrapingLog).filter(ScrapingLog.id == log_id).first()
             if log:
                 log.status = "completed"
                 log.completedAt = datetime.now(UTC)
-                # Final items count will be updated by pipelines
                 session.commit()
-
-        print("Scraping completed successfully!")
+                
+                # Calculate duration
+                duration = (log.completedAt - log.startedAt).total_seconds()
+                
+                # Get actual counts from database
+                from models import Flyer, Offer, Retailer, Store
+                flyers_count = session.query(Flyer).count()
+                offers_count = session.query(Offer).count()
+                retailers_count = session.query(Retailer).count()
+                stores_count = session.query(Store).count()
+                
+                # Print final summary
+                print("\n" + "=" * 80)
+                print("✅ SCRAPING COMPLETED SUCCESSFULLY!")
+                print("=" * 80)
+                print(f"\n📊 Final Statistics:")
+                print(f"   • Items scraped (this run): {log.itemsScraped}")
+                print(f"   • Duration: {int(duration // 60)}m {int(duration % 60)}s ({duration:.2f}s)")
+                if duration > 0:
+                    rate = log.itemsScraped / duration
+                    print(f"   • Average speed: {rate:.2f} items/second")
+                
+                print(f"\n📦 Database Totals:")
+                print(f"   • Flyers: {flyers_count}")
+                print(f"   • Offers: {offers_count}")
+                print(f"   • Retailers: {retailers_count}")
+                print(f"   • Stores: {stores_count}")
+                print(f"   • Total: {flyers_count + offers_count + retailers_count + stores_count}")
+                
+                print(f"\n⏰ Started: {log.startedAt.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+                print(f"⏰ Completed: {log.completedAt.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+                print("=" * 80 + "\n")
 
     except Exception as e:
         print(f"Scraping failed: {e}")

@@ -54,20 +54,56 @@ class ValidationPipeline:
 
 
 class DeduplicationPipeline:
-    """Prevent duplicate entries"""
+    """Prevent duplicate entries using in-memory cache and database check"""
 
     def __init__(self):
-        self.seen_urls = set()
+        self.seen_urls = set()  # In-memory cache for current run
+        self.seen_content_ids = set()  # In-memory cache for contentId
+
+    def open_spider(self, spider):
+        """Load existing URLs and contentIds from database to prevent re-scraping"""
+        try:
+            with get_db_session() as session:
+                # Load existing flyer URLs and contentIds
+                flyers = session.query(Flyer.url, Flyer.contentId).all()
+                for url, content_id in flyers:
+                    if url:
+                        self.seen_urls.add(url)
+                    if content_id:
+                        self.seen_content_ids.add(content_id)
+                
+                # Load existing offer URLs and contentIds
+                offers = session.query(Offer.url, Offer.contentId).all()
+                for url, content_id in offers:
+                    if url:
+                        self.seen_urls.add(url)
+                    if content_id:
+                        self.seen_content_ids.add(content_id)
+                
+                spider.logger.info(f"DeduplicationPipeline: Loaded {len(self.seen_urls)} URLs and {len(self.seen_content_ids)} contentIds from database")
+        except Exception as e:
+            spider.logger.warning(f"DeduplicationPipeline: Could not load existing URLs from database: {e}")
 
     def process_item(self, item, spider):
-        """Check for duplicates"""
+        """Check for duplicates by URL or contentId"""
         url = item.get("url")
+        content_id = item.get("contentId")
+        
+        # Check by URL
         if url and url in self.seen_urls:
-            spider.logger.debug(f"Duplicate item skipped: {url}")
+            spider.logger.debug(f"Duplicate item skipped (by URL): {url}")
+            return None
+        
+        # Check by contentId (for flyers and offers)
+        if content_id and content_id in self.seen_content_ids:
+            spider.logger.debug(f"Duplicate item skipped (by contentId): {content_id}")
             return None
 
+        # Add to cache
         if url:
             self.seen_urls.add(url)
+        if content_id:
+            self.seen_content_ids.add(content_id)
 
         return item
 
@@ -79,10 +115,28 @@ class DatabasePipeline:
         self.retailer_cache: Dict[str, str] = {}  # name -> id
         self.product_cache: Dict[str, str] = {}  # (name, brand) -> id
         self.saved_items_count = 0
+        self.updated_items_count = 0
+        self.created_items_count = 0
+        self.failed_items_count = 0
+        self.items_by_type: Dict[str, int] = {
+            "retailers": 0,
+            "flyers": 0,
+            "offers": 0,
+            "stores": 0,
+        }
         self.log_id = None
+        self.start_time = None
 
     def open_spider(self, spider):
-        """Called when spider opens - find running log entry"""
+        """Open database session"""
+        self.Session = get_db_session()
+        self.start_time = datetime.now(UTC)
+        spider.logger.info("=" * 80)
+        spider.logger.info(f"🚀 DatabasePipeline: Spider '{spider.name}' started")
+        spider.logger.info(f"⏰ Start time: {self.start_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        spider.logger.info("=" * 80)
+        
+        # Find running log entry
         try:
             with get_db_session() as session:
                 log = session.query(ScrapingLog).filter(
@@ -90,35 +144,71 @@ class DatabasePipeline:
                 ).order_by(ScrapingLog.startedAt.desc()).first()
                 if log:
                     self.log_id = log.id
-                    spider.logger.info(f"DatabasePipeline: Found running log entry: {self.log_id}")
+                    spider.logger.info(f"📝 Connected to ScrapingLog ID: {self.log_id}")
         except Exception as e:
-            spider.logger.warning(f"DatabasePipeline: Could not find running log entry: {e}")
+            spider.logger.warning(f"⚠️  Could not find running log entry: {e}")
 
     def process_item(self, item, spider):
         """Save item to database"""
+        item_type = None
+        item_created = False
+        item_updated = False
+        
         try:
             with get_db_session() as session:
                 if "name" in item:  # RetailerItem
-                    self._save_retailer(item, session)
+                    item_type = "retailers"
+                    result = self._save_retailer(item, session)
+                    item_created = result.get("created", False)
+                    item_updated = result.get("updated", False)
                 elif "title" in item:  # FlyerItem
-                    self._save_flyer(item, session)
+                    item_type = "flyers"
+                    result = self._save_flyer(item, session)
+                    item_created = result.get("created", False)
+                    item_updated = result.get("updated", False)
                 elif "productName" in item:  # OfferItem
-                    self._save_offer(item, session)
+                    item_type = "offers"
+                    result = self._save_offer(item, session)
+                    item_created = result.get("created", False)
+                    item_updated = result.get("updated", False)
                 elif "address" in item and "retailerId" in item:  # StoreItem
-                    self._save_store(item, session)
+                    item_type = "stores"
+                    result = self._save_store(item, session)
+                    item_created = result.get("created", False)
+                    item_updated = result.get("updated", False)
 
                 session.commit()
                 self.saved_items_count += 1
-                spider.logger.info(f"Saved item: {item.get('url', item.get('name', 'unknown'))}")
                 
-                # Update ScrapingLog every 5 items to avoid too many database writes
-                if self.log_id and self.saved_items_count % 5 == 0:
+                if item_created:
+                    self.created_items_count += 1
+                if item_updated:
+                    self.updated_items_count += 1
+                
+                if item_type:
+                    self.items_by_type[item_type] = self.items_by_type.get(item_type, 0) + 1
+                
+                # Log every item with details
+                item_name = item.get('url') or item.get('name') or item.get('title') or item.get('productName') or 'unknown'
+                status_icon = "✨" if item_created else "🔄" if item_updated else "💾"
+                spider.logger.info(f"{status_icon} [{item_type or 'unknown'}] {status_icon} {item_name[:80]}")
+                
+                # Update ScrapingLog every 10 items to avoid too many database writes
+                if self.log_id and self.saved_items_count % 10 == 0:
                     self._update_scraping_log(spider)
+                    elapsed = (datetime.now(UTC) - self.start_time).total_seconds() if self.start_time else 0
+                    rate = self.saved_items_count / elapsed if elapsed > 0 else 0
+                    spider.logger.info(f"📈 Progress: {self.saved_items_count} items saved | {rate:.2f} items/sec | Created: {self.created_items_count} | Updated: {self.updated_items_count}")
+                    
         except IntegrityError as e:
-            spider.logger.warning(f"Integrity error (likely duplicate): {e}")
+            self.failed_items_count += 1
+            item_name = item.get('url') or item.get('name') or item.get('title') or 'unknown'
+            spider.logger.warning(f"⚠️  Duplicate/Integrity error for {item_name}: {str(e)[:100]}")
             session.rollback()
         except Exception as e:
-            spider.logger.error(f"Error saving item to database: {e}")
+            self.failed_items_count += 1
+            item_name = item.get('url') or item.get('name') or item.get('title') or 'unknown'
+            spider.logger.error(f"❌ Error saving {item_name}: {str(e)[:200]}")
             session.rollback()
             raise
 
@@ -142,10 +232,12 @@ class DatabasePipeline:
     def _save_retailer(self, item: Dict[str, Any], session):
         """Save retailer to database"""
         name = item["name"]
+        created = False
+        updated = False
         
         # Check cache first
         if name in self.retailer_cache:
-            return self.retailer_cache[name]
+            return {"id": self.retailer_cache[name], "created": False, "updated": False}
 
         # Check if exists
         retailer = session.query(Retailer).filter(Retailer.name == name).first()
@@ -157,9 +249,16 @@ class DatabasePipeline:
             )
             session.add(retailer)
             session.flush()  # Get ID
+            created = True
+        else:
+            # Update existing
+            retailer.category = item.get("category", retailer.category)
+            retailer.logoUrl = item.get("logoUrl", retailer.logoUrl)
+            retailer.scrapedAt = datetime.now(UTC)
+            updated = True
 
         self.retailer_cache[name] = retailer.id
-        return retailer.id
+        return {"id": retailer.id, "created": created, "updated": updated}
 
     def _save_flyer(self, item: Dict[str, Any], session):
         """Save flyer to database"""
@@ -173,7 +272,6 @@ class DatabasePipeline:
             flyer = session.query(Flyer).filter(Flyer.contentId == item["contentId"]).first()
         if flyer:
             # Update existing
-            self.logger.debug(f"Updating existing flyer {flyer.id} with contentId: {item.get('contentId')}, publishedFrom: {item.get('publishedFrom')}")
             flyer.title = item["title"]
             flyer.pages = item["pages"]
             flyer.validFrom = item["validFrom"]
@@ -182,18 +280,14 @@ class DatabasePipeline:
                 flyer.pdfUrl = normalize_url(item["pdfUrl"])
             if item.get("thumbnailUrl"):
                 flyer.thumbnailUrl = normalize_url(item["thumbnailUrl"])
-                self.logger.debug(f"Updated flyer {flyer.id} with thumbnailUrl: {item['thumbnailUrl']}")
             if item.get("contentId"):
                 flyer.contentId = item["contentId"]
-                self.logger.debug(f"Updated flyer {flyer.id} with contentId: {item['contentId']}")
             if item.get("publishedFrom"):
                 flyer.publishedFrom = item["publishedFrom"]
-                self.logger.debug(f"Updated flyer {flyer.id} with publishedFrom: {item['publishedFrom']}")
             if item.get("publishedUntil"):
                 flyer.publishedUntil = item["publishedUntil"]
-                self.logger.debug(f"Updated flyer {flyer.id} with publishedUntil: {item['publishedUntil']}")
             flyer.scrapedAt = datetime.now(UTC)
-            return flyer.id
+            return {"id": flyer.id, "created": False, "updated": True}
 
         # Get retailer ID
         retailer_id = item.get("retailerId")
@@ -235,15 +329,19 @@ class DatabasePipeline:
         )
         session.add(flyer)
         session.flush()
-        self.logger.debug(f"Created flyer {flyer.id} with contentId: {flyer.contentId}, thumbnailUrl: {flyer.thumbnailUrl}")
-        return flyer.id
+        return {"id": flyer.id, "created": True, "updated": False}
 
     def _save_offer(self, item: Dict[str, Any], session):
         """Save offer to database"""
         url = normalize_url(item["url"])
 
-        # Check if exists
+        # Check if exists - try by URL first, then by contentId if available
         offer = session.query(Offer).filter(Offer.url == url).first()
+        
+        # If not found by URL and we have contentId, try to find by contentId
+        if not offer and item.get("contentId"):
+            offer = session.query(Offer).filter(Offer.contentId == item["contentId"]).first()
+        
         if offer:
             # Update existing
             offer.productName = item["productName"]
@@ -280,7 +378,7 @@ class DatabasePipeline:
             if product_id:
                 offer.productId = product_id
             offer.scrapedAt = datetime.now(UTC)
-            return offer.id
+            return {"id": offer.id, "created": False, "updated": True}
 
         # Get retailer ID
         retailer_id = item.get("retailerId")
@@ -348,7 +446,7 @@ class DatabasePipeline:
         )
         session.add(offer)
         session.flush()
-        return offer.id
+        return {"id": offer.id, "created": True, "updated": False}
 
     def _get_or_create_product(self, item: Dict[str, Any], session) -> str:
         """Get or create Product from offer data"""
@@ -421,7 +519,7 @@ class DatabasePipeline:
             store.phone = item.get("phone")
             store.openingHours = item.get("openingHours")
             store.scrapedAt = datetime.now(UTC)
-            return store.id
+            return {"id": store.id, "created": False, "updated": True}
         
         # Create new store
         store = Store(
@@ -436,7 +534,36 @@ class DatabasePipeline:
         )
         session.add(store)
         session.flush()
-        return store.id
+        return {"id": store.id, "created": True, "updated": False}
+
+    def close_spider(self, spider):
+        """Close database session and log final statistics"""
+        end_time = datetime.now(UTC)
+        duration = (end_time - self.start_time).total_seconds() if self.start_time else 0
+        
+        spider.logger.info("")
+        spider.logger.info("=" * 80)
+        spider.logger.info(f"✅ DatabasePipeline: Spider '{spider.name}' finished")
+        spider.logger.info(f"⏰ End time: {end_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        spider.logger.info(f"⏱️  Duration: {int(duration // 60)}m {int(duration % 60)}s ({duration:.2f}s total)")
+        spider.logger.info("")
+        spider.logger.info("📊 Statistics:")
+        spider.logger.info(f"   ✅ Created: {self.created_items_count}")
+        spider.logger.info(f"   🔄 Updated: {self.updated_items_count}")
+        spider.logger.info(f"   ❌ Failed: {self.failed_items_count}")
+        spider.logger.info(f"   📦 Total saved: {self.saved_items_count}")
+        spider.logger.info("")
+        spider.logger.info("📋 Items by type:")
+        for item_type, count in self.items_by_type.items():
+            if count > 0:
+                spider.logger.info(f"   • {item_type.capitalize()}: {count}")
+        if duration > 0:
+            rate = self.saved_items_count / duration
+            spider.logger.info(f"")
+            spider.logger.info(f"⚡ Speed: {rate:.2f} items/second")
+        spider.logger.info("=" * 80)
+        
+        self.Session.remove()
 
     def _update_scraping_log(self, spider):
         """Update ScrapingLog with current items count"""
@@ -461,10 +588,16 @@ class LoggingPipeline:
         """Initialize logging pipeline"""
         self.items_count = 0
         self.log_id = None
+        self.start_time = None
 
     def open_spider(self, spider):
         """Called when spider opens"""
-        spider.logger.info(f"Spider {spider.name} started")
+        self.start_time = datetime.now(UTC)
+        spider.logger.info("")
+        spider.logger.info("=" * 80)
+        spider.logger.info(f"🕷️  Spider '{spider.name}' started")
+        spider.logger.info(f"⏰ Start time: {self.start_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        spider.logger.info("=" * 80)
         
         # Try to find the latest running log entry
         try:
@@ -474,13 +607,25 @@ class LoggingPipeline:
                 ).order_by(ScrapingLog.startedAt.desc()).first()
                 if log:
                     self.log_id = log.id
-                    spider.logger.info(f"Found running log entry: {self.log_id}")
+                    spider.logger.info(f"📝 Connected to ScrapingLog ID: {self.log_id}")
         except Exception as e:
-            spider.logger.warning(f"Could not find running log entry: {e}")
+            spider.logger.warning(f"⚠️  Could not find running log entry: {e}")
 
     def close_spider(self, spider):
         """Called when spider closes"""
-        spider.logger.info(f"Spider {spider.name} finished, scraped {self.items_count} items")
+        end_time = datetime.now(UTC)
+        duration = (end_time - self.start_time).total_seconds() if self.start_time else 0
+        
+        spider.logger.info("")
+        spider.logger.info("=" * 80)
+        spider.logger.info(f"✅ Spider '{spider.name}' finished")
+        spider.logger.info(f"📊 Items processed: {self.items_count}")
+        spider.logger.info(f"⏰ End time: {end_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+        spider.logger.info(f"⏱️  Duration: {int(duration // 60)}m {int(duration % 60)}s ({duration:.2f}s total)")
+        if duration > 0 and self.items_count > 0:
+            rate = self.items_count / duration
+            spider.logger.info(f"⚡ Processing rate: {rate:.2f} items/second")
+        spider.logger.info("=" * 80)
         
         # Update log with final count
         if self.log_id:
@@ -490,25 +635,26 @@ class LoggingPipeline:
                     if log:
                         log.itemsScraped = (log.itemsScraped or 0) + self.items_count
                         session.commit()
-                        spider.logger.info(f"Updated log entry {self.log_id} with {self.items_count} items")
+                        spider.logger.info(f"📝 Updated ScrapingLog ID {self.log_id}: {log.itemsScraped} total items")
             except Exception as e:
-                spider.logger.error(f"Failed to update log entry: {e}")
+                spider.logger.error(f"❌ Failed to update log entry: {e}")
 
     def process_item(self, item, spider):
         """Log item processing and update ScrapingLog in real-time"""
         self.items_count += 1
         
-        # Update log every 10 items to avoid too many database writes
-        if self.log_id and self.items_count % 10 == 0:
+        # Update log every 20 items to avoid too many database writes
+        if self.log_id and self.items_count % 20 == 0:
             try:
                 with get_db_session() as session:
                     log = session.query(ScrapingLog).filter(ScrapingLog.id == self.log_id).first()
                     if log:
-                        log.itemsScraped = (log.itemsScraped or 0) + 10
+                        log.itemsScraped = (log.itemsScraped or 0) + 20
                         session.commit()
-                        spider.logger.debug(f"Updated log: {log.itemsScraped} items scraped so far")
+                        elapsed = (datetime.now(UTC) - self.start_time).total_seconds() if self.start_time else 0
+                        rate = self.items_count / elapsed if elapsed > 0 else 0
+                        spider.logger.info(f"📈 Progress: {self.items_count} items processed | {rate:.2f} items/sec")
             except Exception as e:
-                spider.logger.warning(f"Failed to update log entry: {e}")
+                spider.logger.warning(f"⚠️  Failed to update log entry: {e}")
         
-        spider.logger.debug(f"Processing item: {item.get('url', item.get('name', 'unknown'))}")
         return item

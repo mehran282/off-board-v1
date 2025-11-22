@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: ghcr.io/mehran282/off-board-frontend:latest
+    container_name: off-board-frontend
+    restart: unless-stopped
+    ports:
+      - "3040:3040"
+    environment:
+      # Database (required)
+      - DATABASE_URL=${DATABASE_URL}
+      
+      # Next.js settings
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3040
+      
+      # Locale settings (optional)
+      - NEXT_PUBLIC_DEFAULT_LOCALE=${NEXT_PUBLIC_DEFAULT_LOCALE:-en}
+      - NEXT_PUBLIC_SUPPORTED_LOCALES=${NEXT_PUBLIC_SUPPORTED_LOCALES:-en,de}
+    
+    networks:
+      - frontend-network
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3040/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  frontend-network:
+    driver: bridge
+

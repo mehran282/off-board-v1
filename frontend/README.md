@@ -120,7 +120,79 @@ The application uses Prisma ORM with PostgreSQL (Supabase). Make sure the databa
 npx prisma generate
 ```
 
+## Docker Usage
+
+### Build Image
+
+```bash
+docker build -t off-board-frontend:latest ./frontend
+```
+
+### Run Container
+
+```bash
+docker run --rm \
+  -p 3040:3040 \
+  -e DATABASE_URL="postgresql://user:pass@host:5432/dbname" \
+  off-board-frontend:latest
+```
+
+### Using GitHub Container Registry
+
+```bash
+# Pull image
+docker pull ghcr.io/mehran282/off-board-frontend:latest
+
+# Run with environment variables
+docker run --rm \
+  -p 3040:3040 \
+  -e DATABASE_URL="your-database-url" \
+  ghcr.io/mehran282/off-board-frontend:latest
+```
+
+### Using Docker Compose
+
+```bash
+cd frontend
+
+# Create .env file
+cat > .env << EOF
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
+NEXT_PUBLIC_DEFAULT_LOCALE=en
+NEXT_PUBLIC_SUPPORTED_LOCALES=en,de
+EOF
+
+# Run
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+```
+
 ## Deployment
+
+### Docker Deployment
+
+1. Build the Docker image:
+
+```bash
+docker build -t off-board-frontend:latest ./frontend
+```
+
+2. Run with environment variables:
+
+```bash
+docker run -d \
+  -p 3040:3040 \
+  -e DATABASE_URL="your-database-url" \
+  --name off-board-frontend \
+  off-board-frontend:latest
+```
+
+### Vercel/Netlify Deployment
 
 1. Build the application:
 
@@ -130,6 +202,12 @@ npm run build
 
 2. Set environment variables in your hosting platform
 3. Deploy to Vercel, Netlify, or your preferred platform
+
+### GitHub Actions
+
+The project includes a GitHub Action workflow (`.github/workflows/build-frontend.yml`) that automatically builds and pushes Docker images to GitHub Container Registry (GHCR) on every push to `master` or `main` branch.
+
+The image will be available at: `ghcr.io/mehran282/off-board-frontend:latest`
 
 ## License
 
