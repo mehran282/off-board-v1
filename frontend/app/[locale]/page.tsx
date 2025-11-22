@@ -3,10 +3,11 @@ import { Footer } from '@/components/footer';
 import { FlyerCard } from '@/components/flyer-card';
 import { OfferCard } from '@/components/offer-card';
 import { RetailerCard } from '@/components/retailer-card';
+import { ProductCard } from '@/components/product-card';
 import { SearchBar } from '@/components/search-bar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FileText, Tag, ArrowRight, Store } from 'lucide-react';
+import { FileText, Tag, ArrowRight, Store, Package } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import prisma from '@/lib/db';
@@ -68,6 +69,33 @@ async function getTopOffers() {
     return offers;
   } catch (error) {
     console.error('Error fetching top offers:', error);
+    return [];
+  }
+}
+
+async function getTopProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      take: 6, // 6 کارت برای موبایل
+      select: {
+        id: true,
+        name: true,
+        brand: true,
+        category: true,
+        imageUrl: true,
+        _count: {
+          select: {
+            offers: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return products;
+  } catch (error) {
+    console.error('Error fetching top products:', error);
     return [];
   }
 }
@@ -172,11 +200,12 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const t = await getTranslations('home');
   const tCommon = await getTranslations('common');
-  const [recentFlyers, topOffers, topRetailers, topRetailersWithOffers] = await Promise.all([
+  const [recentFlyers, topOffers, topRetailers, topRetailersWithOffers, topProducts] = await Promise.all([
     getRecentFlyers(),
     getTopOffers(),
     getTopRetailers(),
     getTopRetailersWithOffers(),
+    getTopProducts(),
   ]);
 
   return (
@@ -248,6 +277,31 @@ export default async function HomePage({ params }: HomePageProps) {
               </section>
             )}
 
+            {/* Top Products */}
+            {topProducts.length > 0 && (
+              <section className="py-4 px-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 md:mb-6">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-5 w-5 md:h-6 md:w-6" />
+                    <h2 className="text-xl md:text-2xl font-bold">{tCommon('products')}</h2>
+                  </div>
+                  <Link href={`/${locale}/products`}>
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                      {tCommon('showAll')}
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
+                  {topProducts.map((product, index: number) => (
+                    <div key={product.id} className={`w-full ${index >= 5 ? 'sm:hidden' : ''}`}>
+                      <ProductCard product={product as any} locale={locale} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* Top 2 Retailers with Offers */}
             {topRetailersWithOffers.length > 0 && (
               <section className="py-4 px-4">
@@ -304,7 +358,7 @@ export default async function HomePage({ params }: HomePageProps) {
                         </Link>
                       </div>
                       <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-2 flex-1">
-                        {retailer.offers.slice(0, 8).map((offer: {
+                        {retailer.offers.map((offer: {
                           id: string;
                           productName: string;
                           brand: string | null;
@@ -318,8 +372,8 @@ export default async function HomePage({ params }: HomePageProps) {
                             logoUrl: string | null;
                           };
                           validUntil: Date | null;
-                        }) => (
-                          <div key={offer.id} className="w-full">
+                        }, index: number) => (
+                          <div key={offer.id} className={`w-full ${index >= 6 ? 'hidden sm:block' : ''}`}>
                             <OfferCard
                               id={offer.id}
                               productName={offer.productName}
@@ -370,8 +424,8 @@ export default async function HomePage({ params }: HomePageProps) {
                       logoUrl: string | null;
                     };
                     validUntil: Date | null;
-                  }) => (
-                    <div key={offer.id} className="w-full">
+                  }, index: number) => (
+                    <div key={offer.id} className={`w-full ${index >= 6 ? 'hidden sm:block' : ''}`}>
                       <OfferCard
                         id={offer.id}
                         productName={offer.productName}
@@ -415,8 +469,8 @@ export default async function HomePage({ params }: HomePageProps) {
                       offers: number;
                       stores: number;
                     };
-                  }) => (
-                    <div key={retailer.id} className="w-full">
+                  }, index: number) => (
+                    <div key={retailer.id} className={`w-full ${index >= 6 ? 'hidden sm:block' : ''}`}>
                       <RetailerCard
                         id={retailer.id}
                         name={retailer.name}
@@ -433,7 +487,7 @@ export default async function HomePage({ params }: HomePageProps) {
             )}
 
             {/* Empty State */}
-            {recentFlyers.length === 0 && topOffers.length === 0 && topRetailers.length === 0 && (
+            {recentFlyers.length === 0 && topOffers.length === 0 && topRetailers.length === 0 && topProducts.length === 0 && (
               <section className="py-12 text-center">
                 <p className="text-muted-foreground text-lg">{t('noData')}</p>
               </section>
