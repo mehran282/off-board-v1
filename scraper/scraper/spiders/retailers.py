@@ -4,6 +4,14 @@ import scrapy
 from scrapy_playwright.page import PageMethod
 from ..items import RetailerItem, StoreItem
 
+# Geocoding for address to coordinates (optional, only if coordinates not in JSON)
+try:
+    from geopy.geocoders import Nominatim
+    from geopy.exc import GeocoderTimedOut, GeocoderServiceError
+    GEOCODING_AVAILABLE = True
+except ImportError:
+    GEOCODING_AVAILABLE = False
+
 
 class RetailersSpider(scrapy.Spider):
     """Spider for scraping retailers from kaufDA.de"""
@@ -14,6 +22,15 @@ class RetailersSpider(scrapy.Spider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.base_url = "https://www.kaufda.de"
+        # Initialize geocoder if available (for fallback when coordinates not in JSON)
+        if GEOCODING_AVAILABLE:
+            try:
+                self.geocoder = Nominatim(user_agent="off-board-scraper/1.0", timeout=10)
+            except Exception:
+                self.geocoder = None
+                self.logger.warning("Failed to initialize geocoder")
+        else:
+            self.geocoder = None
 
     def parse(self, response):
         """Parse main page and extract retailer data from JSON"""
@@ -202,10 +219,9 @@ class RetailersSpider(scrapy.Spider):
                             errback=self.errback_retailer_stores,
                         )
             
-            # Try to extract stores from JSON (if available on main page)
-            stores = self._extract_stores_from_json(json_data, seen_names)
-            for store_item in stores:
-                yield store_item
+            # Note: Stores will be extracted from retailer detail pages (parse_retailer_stores)
+            # We don't yield stores here to ensure retailers are saved first
+            # Stores from main page JSON are often incomplete and may arrive before retailer is saved
                 
         except Exception as e:
             self.logger.error(f"Error parsing JSON retailer data: {e}")
@@ -243,11 +259,69 @@ class RetailersSpider(scrapy.Spider):
                     if isinstance(store_data, dict):
                         store_item = StoreItem()
                         store_item["retailerId"] = retailer_name
-                        store_item["address"] = store_data.get("address", "")
-                        store_item["city"] = store_data.get("city", "")
-                        store_item["postalCode"] = store_data.get("postalCode", "") or store_data.get("postcode", "")
-                        store_item["latitude"] = store_data.get("latitude")
-                        store_item["longitude"] = store_data.get("longitude")
+                        address = store_data.get("address", "")
+                        city = store_data.get("city", "")
+                        postal_code = store_data.get("postalCode", "") or store_data.get("postcode", "")
+                        store_item["address"] = address
+                        store_item["city"] = city
+                        store_item["postalCode"] = postal_code
+                        
+                        # Try multiple possible keys for latitude/longitude
+                        latitude = (
+                            store_data.get("latitude") or 
+                            store_data.get("lat") or 
+                            store_data.get("geoLatitude") or
+                            (store_data.get("geo", {}).get("latitude") if isinstance(store_data.get("geo"), dict) else None) or
+                            (store_data.get("location", {}).get("latitude") if isinstance(store_data.get("location"), dict) else None)
+                        )
+                        
+                        longitude = (
+                            store_data.get("longitude") or 
+                            store_data.get("lng") or 
+                            store_data.get("lon") or 
+                            store_data.get("geoLongitude") or
+                            (store_data.get("geo", {}).get("longitude") if isinstance(store_data.get("geo"), dict) else None) or
+                            (store_data.get("location", {}).get("longitude") if isinstance(store_data.get("location"), dict) else None)
+                        )
+                        
+                        # Convert to float if string
+                        if latitude and isinstance(latitude, str):
+                            try:
+                                latitude = float(latitude)
+                            except (ValueError, TypeError):
+                                latitude = None
+                        
+                        if longitude and isinstance(longitude, str):
+                            try:
+                                longitude = float(longitude)
+                            except (ValueError, TypeError):
+                                longitude = None
+                        
+                        # Validate coordinates
+                        if latitude is not None:
+                            if not isinstance(latitude, (int, float)) or latitude < -90 or latitude > 90:
+                                latitude = None
+                        
+                        if longitude is not None:
+                            if not isinstance(longitude, (int, float)) or longitude < -180 or longitude > 180:
+                                longitude = None
+                        
+                        # If coordinates not found in JSON, try geocoding (fallback)
+                        if (latitude is None or longitude is None) and self.geocoder and address and city:
+                            try:
+                                geocode_address = f"{address}, {postal_code} {city}, Germany"
+                                location = self.geocoder.geocode(geocode_address, timeout=10)
+                                if location:
+                                    if latitude is None:
+                                        latitude = location.latitude
+                                    if longitude is None:
+                                        longitude = location.longitude
+                                    self.logger.debug(f"Geocoded address: {geocode_address} -> ({latitude}, {longitude})")
+                            except (GeocoderTimedOut, GeocoderServiceError, Exception) as e:
+                                self.logger.debug(f"Geocoding failed for {address}, {city}: {e}")
+                        
+                        store_item["latitude"] = latitude
+                        store_item["longitude"] = longitude
                         store_item["phone"] = store_data.get("phone", "")
                         
                         # Handle opening hours (convert to JSON string if dict/list)
@@ -347,9 +421,11 @@ class RetailersSpider(scrapy.Spider):
         
         # Extract stores from JSON
         stores = self._extract_stores_from_retailer_json(json_data, retailer_name)
+        self.logger.info(f"📦 Extracted {len(stores)} stores from JSON for retailer '{retailer_name}'")
         
         # Also check for store links in HTML and follow them
         store_links = response.css('a[href*="Filiale"], a[href*="Standort"], a[href*="store"], a[href*="location"]::attr(href)').getall()
+        self.logger.info(f"🔗 Found {len(store_links)} store links in HTML for retailer '{retailer_name}'")
         for link in store_links[:10]:  # Limit to first 10 store links
             if link:
                 full_url = response.urljoin(link)
@@ -366,8 +442,13 @@ class RetailersSpider(scrapy.Spider):
                     },
                 )
         
+        # Yield all extracted stores
         for store_item in stores:
-            yield store_item
+            if store_item.get("address") and store_item.get("retailerId"):
+                self.logger.debug(f"📍 Yielding store: {store_item.get('address')}, {store_item.get('city')} for retailer '{retailer_name}'")
+                yield store_item
+            else:
+                self.logger.warning(f"⚠️  Skipping invalid store item (missing address or retailerId): {store_item}")
     
     def _extract_stores_from_retailer_json(self, json_data: dict, retailer_name: str):
         """Extract store data from retailer detail page JSON - deep search"""
@@ -437,8 +518,76 @@ class RetailersSpider(scrapy.Spider):
                 store_item["address"] = address
                 store_item["city"] = city
                 store_item["postalCode"] = postal_code
-                store_item["latitude"] = store_data.get("latitude") or store_data.get("lat") or store_data.get("geoLatitude")
-                store_item["longitude"] = store_data.get("longitude") or store_data.get("lng") or store_data.get("lon") or store_data.get("geoLongitude")
+                
+                # Try multiple possible keys for latitude/longitude from kaufda.de JSON
+                # Check direct keys first
+                latitude = store_data.get("latitude") or store_data.get("lat") or store_data.get("geoLatitude")
+                longitude = store_data.get("longitude") or store_data.get("lng") or store_data.get("lon") or store_data.get("geoLongitude")
+                
+                # Check nested objects (geo, location, coordinates, position)
+                if not latitude and isinstance(store_data.get("geo"), dict):
+                    latitude = store_data["geo"].get("latitude") or store_data["geo"].get("lat")
+                
+                if not longitude and isinstance(store_data.get("geo"), dict):
+                    longitude = store_data["geo"].get("longitude") or store_data["geo"].get("lng") or store_data["geo"].get("lon")
+                
+                if not latitude and isinstance(store_data.get("location"), dict):
+                    latitude = store_data["location"].get("latitude") or store_data["location"].get("lat")
+                
+                if not longitude and isinstance(store_data.get("location"), dict):
+                    longitude = store_data["location"].get("longitude") or store_data["location"].get("lng") or store_data["location"].get("lon")
+                
+                if not latitude and isinstance(store_data.get("coordinates"), dict):
+                    latitude = store_data["coordinates"].get("latitude") or store_data["coordinates"].get("lat")
+                
+                if not longitude and isinstance(store_data.get("coordinates"), dict):
+                    longitude = store_data["coordinates"].get("longitude") or store_data["coordinates"].get("lng") or store_data["coordinates"].get("lon")
+                
+                if not latitude and isinstance(store_data.get("position"), dict):
+                    latitude = store_data["position"].get("latitude") or store_data["position"].get("lat")
+                
+                if not longitude and isinstance(store_data.get("position"), dict):
+                    longitude = store_data["position"].get("longitude") or store_data["position"].get("lng") or store_data["position"].get("lon")
+                
+                # Convert to float if string
+                if latitude and isinstance(latitude, str):
+                    try:
+                        latitude = float(latitude)
+                    except (ValueError, TypeError):
+                        latitude = None
+                
+                if longitude and isinstance(longitude, str):
+                    try:
+                        longitude = float(longitude)
+                    except (ValueError, TypeError):
+                        longitude = None
+                
+                # Validate coordinates
+                if latitude is not None:
+                    if not isinstance(latitude, (int, float)) or latitude < -90 or latitude > 90:
+                        latitude = None
+                
+                if longitude is not None:
+                    if not isinstance(longitude, (int, float)) or longitude < -180 or longitude > 180:
+                        longitude = None
+                
+                # If coordinates not found in JSON, try geocoding (fallback)
+                if (latitude is None or longitude is None) and self.geocoder and address and city:
+                    try:
+                        # Build address string for geocoding
+                        geocode_address = f"{address}, {postal_code} {city}, Germany"
+                        location = self.geocoder.geocode(geocode_address, timeout=10)
+                        if location:
+                            if latitude is None:
+                                latitude = location.latitude
+                            if longitude is None:
+                                longitude = location.longitude
+                            self.logger.debug(f"Geocoded address: {geocode_address} -> ({latitude}, {longitude})")
+                    except (GeocoderTimedOut, GeocoderServiceError, Exception) as e:
+                        self.logger.debug(f"Geocoding failed for {address}, {city}: {e}")
+                
+                store_item["latitude"] = latitude
+                store_item["longitude"] = longitude
                 store_item["phone"] = store_data.get("phone", "") or store_data.get("telephone", "") or store_data.get("phoneNumber", "")
                 
                 # Handle opening hours
@@ -456,8 +605,9 @@ class RetailersSpider(scrapy.Spider):
                         store_item["openingHours"] = str(opening_hours)
                 
                 stores.append(store_item)
+                self.logger.debug(f"✅ Added store: {address}, {city}, {postal_code} (lat: {latitude}, lng: {longitude})")
             
-            self.logger.info(f"Found {len(stores)} stores for retailer {retailer_name}")
+            self.logger.info(f"📦 Found {len(stores)} stores for retailer '{retailer_name}'")
             
         except Exception as e:
             self.logger.warning(f"Error extracting stores for retailer {retailer_name}: {e}")

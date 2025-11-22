@@ -56,18 +56,21 @@ export function Header() {
             </Link>
           </nav>
 
+          {/* Mobile Home Link - Always visible */}
+          <div className="md:hidden">
+            <Link
+              href={`/${locale}`}
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+            >
+              <Home className="h-5 w-5" />
+              <span>{t('home')}</span>
+            </Link>
+          </div>
+
           {/* Mobile Menu - Left side when menu is open */}
           {mobileMenuOpen && (
             <div className="md:hidden flex-1">
               <nav className="flex flex-row items-center justify-start gap-3 sm:gap-4 overflow-x-auto">
-                <Link
-                  href={`/${locale}`}
-                  className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Home className="h-5 w-5" />
-                  <span>{t('home')}</span>
-                </Link>
                 <Link
                   href={`/${locale}/flyers`}
                   className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"

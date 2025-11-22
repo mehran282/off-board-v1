@@ -2,6 +2,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { FlyerCard } from '@/components/flyer-card';
 import { OfferCard } from '@/components/offer-card';
+import { StoreMap } from '@/components/store-map';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -53,7 +54,16 @@ async function getRetailer(id: string) {
           },
         },
         stores: {
-          take: 10,
+          take: 50,
+          select: {
+            id: true,
+            address: true,
+            city: true,
+            postalCode: true,
+            latitude: true,
+            longitude: true,
+            phone: true,
+          },
         },
         _count: {
           select: {
@@ -169,6 +179,24 @@ export default async function RetailerDetailPage({
               <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
               {t('storeLocations')} ({retailer.stores.length})
             </h2>
+            
+            {/* Map - Always show, component handles empty coordinates */}
+            <div className="mb-4 sm:mb-6">
+              <StoreMap 
+                stores={retailer.stores.map((store: any) => ({
+                  id: store.id,
+                  address: store.address,
+                  city: store.city,
+                  postalCode: store.postalCode,
+                  latitude: store.latitude,
+                  longitude: store.longitude,
+                  name: retailer.name,
+                }))}
+                retailerName={retailer.name}
+              />
+            </div>
+
+            {/* Store List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {retailer.stores.map((store: {
                 id: string;

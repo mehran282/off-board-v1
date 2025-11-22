@@ -174,9 +174,14 @@ class DatabasePipeline:
                     item_updated = result.get("updated", False)
                 elif "address" in item and "retailerId" in item:  # StoreItem
                     item_type = "stores"
-                    result = self._save_store(item, session)
-                    item_created = result.get("created", False)
-                    item_updated = result.get("updated", False)
+                    try:
+                        result = self._save_store(item, session)
+                        item_created = result.get("created", False)
+                        item_updated = result.get("updated", False)
+                    except ValueError as e:
+                        spider.logger.error(f"❌ Failed to save store: {e}")
+                        spider.logger.error(f"   Store data: retailerId={item.get('retailerId')}, address={item.get('address')}, city={item.get('city')}")
+                        raise  # Re-raise to be caught by outer exception handler
 
                 # Note: commit is handled by get_db_session context manager
                 self.saved_items_count += 1
@@ -233,14 +238,16 @@ class DatabasePipeline:
             spider.logger.warning(f"Failed to update ScrapingLog: {e}")
 
     def _save_retailer(self, item: Dict[str, Any], session):
-        """Save retailer to database"""
+        """Save retailer to database - MUST be called before saving stores"""
         name = item["name"]
         created = False
         updated = False
         
         # Check cache first
         if name in self.retailer_cache:
-            return {"id": self.retailer_cache[name], "created": False, "updated": False}
+            retailer_id = self.retailer_cache[name]
+            self.logger.debug(f"Retailer '{name}' found in cache (ID: {retailer_id})")
+            return {"id": retailer_id, "created": False, "updated": False}
 
         # Check if exists
         retailer = session.query(Retailer).filter(Retailer.name == name).first()
@@ -251,15 +258,17 @@ class DatabasePipeline:
                 logoUrl=item.get("logoUrl"),
             )
             session.add(retailer)
-            session.flush()  # Get ID
+            session.flush()  # Get ID - IMPORTANT: flush to ensure retailer is available for stores
             created = True
+            self.logger.info(f"✨ Created retailer '{name}' (ID: {retailer.id})")
         else:
-            # Update existing
-            retailer.category = item.get("category", retailer.category)
-            retailer.logoUrl = item.get("logoUrl", retailer.logoUrl)
-            retailer.scrapedAt = datetime.now(UTC)
-            updated = True
-
+            # Update existing retailer
+            if item.get("logoUrl") and item.get("logoUrl") != retailer.logoUrl:
+                retailer.logoUrl = item.get("logoUrl")
+                updated = True
+            self.logger.debug(f"Retailer '{name}' already exists (ID: {retailer.id})")
+        
+        # Cache retailer ID - IMPORTANT: cache after flush to ensure ID is available
         self.retailer_cache[name] = retailer.id
         return {"id": retailer.id, "created": created, "updated": updated}
 
@@ -489,23 +498,44 @@ class DatabasePipeline:
         return product.id
 
     def _save_store(self, item: Dict[str, Any], session):
-        """Save store to database"""
+        """Save store to database - REQUIRES retailer to be saved first"""
         retailer_id = item.get("retailerId")
         address = item.get("address", "").strip()
         
         if not retailer_id or not address:
+            self.logger.warning(f"Store item missing required fields: retailerId={retailer_id}, address={address}")
             raise ValueError("Retailer ID and address are required for store")
         
         # Convert retailer name to ID if needed
+        # IMPORTANT: Check cache first (retailers should be saved before stores)
         if isinstance(retailer_id, str) and retailer_id not in self.retailer_cache:
+            # Retailer not in cache - try to find it in database
             retailer = session.query(Retailer).filter(Retailer.name == retailer_id).first()
             if retailer:
+                # Found in database - add to cache
                 self.retailer_cache[retailer_id] = retailer.id
                 retailer_id = retailer.id
+                self.logger.debug(f"Found retailer '{retailer_id}' in database (not in cache)")
             else:
-                raise ValueError(f"Retailer '{retailer_id}' not found")
+                # Retailer not found - create it as fallback (shouldn't happen if order is correct)
+                self.logger.warning(f"⚠️  Retailer '{retailer_id}' not found in cache or database, creating it as fallback...")
+                try:
+                    new_retailer = Retailer(
+                        name=retailer_id,
+                        category="General",
+                    )
+                    session.add(new_retailer)
+                    session.flush()  # Flush to get ID
+                    self.retailer_cache[retailer_id] = new_retailer.id
+                    retailer_id = new_retailer.id
+                    self.logger.info(f"✨ Created retailer '{retailer_id}' as fallback for store")
+                except Exception as e:
+                    self.logger.error(f"❌ Failed to create retailer '{retailer_id}': {e}")
+                    raise ValueError(f"Retailer '{retailer_id}' not found and could not be created: {e}")
         elif retailer_id in self.retailer_cache:
+            # Retailer in cache - use cached ID
             retailer_id = self.retailer_cache[retailer_id]
+            self.logger.debug(f"Using cached retailer ID for '{item.get('retailerId')}': {retailer_id}")
         
         # Check if store exists (unique constraint on retailerId + address)
         store = session.query(Store).filter(
