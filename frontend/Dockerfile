@@ -23,7 +23,9 @@ COPY --from=deps /app/package-lock.json ./package-lock.json
 # Copy application code
 COPY . .
 
-# Generate Prisma Client
+# Generate Prisma Client (DATABASE_URL not required for generate)
+# Set a dummy DATABASE_URL to satisfy prisma.config.ts validation
+ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
 RUN npx prisma generate
 
 # Build Next.js application
