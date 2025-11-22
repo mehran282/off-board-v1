@@ -131,6 +131,7 @@ class DatabasePipeline:
         """Open database session"""
         self.Session = get_db_session()
         self.start_time = datetime.now(UTC)
+        self.logger = spider.logger  # Store logger for use in private methods
         spider.logger.info("=" * 80)
         spider.logger.info(f"🚀 DatabasePipeline: Spider '{spider.name}' started")
         spider.logger.info(f"⏰ Start time: {self.start_time.strftime('%Y-%m-%d %H:%M:%S UTC')}")
