@@ -202,12 +202,27 @@ class FlyersSpider(scrapy.Spider):
                 # if pdf_url:
                 #     item["pdfUrl"] = pdf_url
                 
-                # Yield flyer item first
-                yield item
-                
-                # Then fetch pages and offers from API if we have contentId
+                # Always fetch thumbnail from pages API if we have contentId
+                # This ensures we get the first page image as thumbnail
                 if content_id:
-                    # Request pages API to get page images and offers
+                    # Request pages API to get first page image as thumbnail
+                    pages_api_url = f"https://content-viewer-be.kaufda.de/api/v1/brochures/{content_id}/pages?partner=kaufda_web&lat=52.522&lng=13.4161"
+                    yield Request(
+                        pages_api_url,
+                        callback=self.parse_flyer_thumbnail,
+                        meta={
+                            "flyer_item": item,
+                            "content_id": content_id,
+                        },
+                        dont_filter=True,
+                        priority=1,  # Higher priority to get thumbnail first
+                    )
+                else:
+                    # Yield flyer item if no contentId
+                    yield item
+                
+                # Also fetch pages API to get offers (separate request)
+                if content_id:
                     pages_api_url = f"https://content-viewer-be.kaufda.de/api/v1/brochures/{content_id}/pages?partner=kaufda_web&lat=52.522&lng=13.4161"
                     yield Request(
                         pages_api_url,
@@ -317,6 +332,49 @@ class FlyersSpider(scrapy.Spider):
             item["pdfUrl"] = pdf_url
 
         yield item
+
+    def parse_flyer_thumbnail(self, response):
+        """Parse flyer pages API to extract first page image as thumbnail"""
+        try:
+            data = json.loads(response.text)
+            contents = data.get("contents", [])
+            flyer_item = response.meta.get("flyer_item", {})
+            content_id = response.meta.get("content_id")
+            
+            # Extract thumbnail from first page (page 0)
+            if contents:
+                first_page = contents[0]
+                images = first_page.get("images", [])
+                if images:
+                    # Use the largest image (usually last one) for best quality
+                    # But for thumbnail, we can use a medium size (768x1024 or 1600x1600)
+                    # Try to find a good balance between quality and size
+                    thumbnail_url = None
+                    for img in images:
+                        size = img.get("size", "")
+                        url = img.get("url")
+                        # Prefer 768x1024 or 1600x1600 for thumbnail
+                        if "768x1024" in size or "1600x1600" in size:
+                            thumbnail_url = url
+                            break
+                    # If no medium size found, use largest
+                    if not thumbnail_url:
+                        thumbnail_url = images[-1].get("url") if images else None
+                    
+                    if thumbnail_url:
+                        flyer_item["thumbnailUrl"] = thumbnail_url
+                        self.logger.info(f"Extracted thumbnailUrl from pages API for {content_id}: {thumbnail_url[:80]}...")
+            
+            # Yield flyer item with thumbnail - this will update existing or create new
+            yield flyer_item
+            
+        except Exception as e:
+            self.logger.error(f"Error parsing flyer thumbnail from API: {e}")
+            import traceback
+            self.logger.error(traceback.format_exc())
+            # Yield original item even if thumbnail extraction fails
+            flyer_item = response.meta.get("flyer_item", {})
+            yield flyer_item
 
     def parse_flyer_pages(self, response):
         """Parse flyer pages API response to extract page images and offers"""

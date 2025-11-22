@@ -165,8 +165,12 @@ class DatabasePipeline:
         """Save flyer to database"""
         url = normalize_url(item["url"])
 
-        # Check if exists
+        # Check if exists - try by URL first, then by contentId if available
         flyer = session.query(Flyer).filter(Flyer.url == url).first()
+        
+        # If not found by URL and we have contentId, try to find by contentId
+        if not flyer and item.get("contentId"):
+            flyer = session.query(Flyer).filter(Flyer.contentId == item["contentId"]).first()
         if flyer:
             # Update existing
             self.logger.debug(f"Updating existing flyer {flyer.id} with contentId: {item.get('contentId')}, publishedFrom: {item.get('publishedFrom')}")
