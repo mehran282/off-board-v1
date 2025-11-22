@@ -4,6 +4,8 @@
     "flyers": "Flyers",
     "offers": "Offers",
     "retailers": "Retailers",
+    "products": "Products",
+    "productsDescription": "Browse all available products",
     "search": "Search",
     "back": "Back",
     "showAll": "Show All",
@@ -101,6 +103,8 @@
     "allCategories": "All Categories",
     "retailer": "Retailer",
     "allRetailers": "All Retailers",
+    "brand": "Brand",
+    "allBrands": "All Brands",
     "minDiscount": "Minimum Discount (%)",
     "noMinimum": "No Minimum",
     "orMore": "or more"

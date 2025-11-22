@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { SearchBar } from './search-bar';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
-import { FileText, Tag, Store, Home, Menu, X, Search } from 'lucide-react';
+import { FileText, Tag, Store, Home, Menu, X, Search, Package } from 'lucide-react';
 
 export function Header() {
   const t = useTranslations('common');
@@ -48,6 +48,13 @@ export function Header() {
               <Store className="h-4 w-4" />
               {t('retailers')}
             </Link>
+            <Link
+              href={`/${locale}/products`}
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+            >
+              <Package className="h-4 w-4" />
+              {t('products')}
+            </Link>
           </nav>
 
           {/* Mobile Menu - Left side when menu is open */}
@@ -85,6 +92,14 @@ export function Header() {
                 >
                   <Store className="h-5 w-5" />
                   <span>{t('retailers')}</span>
+                </Link>
+                <Link
+                  href={`/${locale}/products`}
+                  className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Package className="h-5 w-5" />
+                  <span>{t('products')}</span>
                 </Link>
               </nav>
             </div>

@@ -17,9 +17,11 @@ import { X } from 'lucide-react';
 interface FilterPanelProps {
   categories?: Array<{ name: string; count: number }>;
   retailers?: Array<{ id: string; name: string }>;
+  brands?: Array<{ name: string; count: number }>;
+  currentBrand?: string | null;
 }
 
-export function FilterPanel({ categories = [], retailers = [] }: FilterPanelProps) {
+export function FilterPanel({ categories = [], retailers = [], brands = [], currentBrand }: FilterPanelProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -27,16 +29,19 @@ export function FilterPanel({ categories = [], retailers = [] }: FilterPanelProp
   const t = useTranslations('filters');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [selectedRetailer, setSelectedRetailer] = useState<string | undefined>(undefined);
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>(undefined);
   const [minDiscount, setMinDiscount] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const category = searchParams.get('category');
     const retailer = searchParams.get('retailerId');
+    const brand = searchParams.get('brand');
     const discount = searchParams.get('minDiscount');
     setSelectedCategory(category || undefined);
     setSelectedRetailer(retailer || undefined);
+    setSelectedBrand(brand || currentBrand || undefined);
     setMinDiscount(discount || undefined);
-  }, [searchParams]);
+  }, [searchParams, currentBrand]);
 
   const updateFilters = (key: string, value: string | undefined) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -53,7 +58,7 @@ export function FilterPanel({ categories = [], retailers = [] }: FilterPanelProp
     router.push(pathname);
   };
 
-  const hasActiveFilters = selectedCategory || selectedRetailer || minDiscount;
+  const hasActiveFilters = selectedCategory || selectedRetailer || selectedBrand || minDiscount;
 
   return (
     <div className="space-y-3 md:space-y-4 p-3 md:p-4 border rounded-lg bg-card">
@@ -121,6 +126,30 @@ export function FilterPanel({ categories = [], retailers = [] }: FilterPanelProp
           </div>
         )}
 
+        {brands.length > 0 && (
+          <div>
+            <label className="text-sm font-medium mb-2 block">{t('brand')}</label>
+            <Select
+              value={selectedBrand}
+              onValueChange={(value) => {
+                setSelectedBrand(value);
+                updateFilters('brand', value);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t('allBrands')} />
+              </SelectTrigger>
+              <SelectContent>
+                {brands.map((brand) => (
+                  <SelectItem key={brand.name} value={brand.name}>
+                    {brand.name} ({brand.count})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         <div>
           <label className="text-sm font-medium mb-2 block">
             {t('minDiscount')}
@@ -168,6 +197,20 @@ export function FilterPanel({ categories = [], retailers = [] }: FilterPanelProp
                 onClick={() => {
                   setSelectedRetailer(undefined);
                   updateFilters('retailerId', undefined);
+                }}
+                className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+          {selectedBrand && (
+            <Badge variant="secondary" className="gap-1">
+              {t('brand')}: {selectedBrand}
+              <button
+                onClick={() => {
+                  setSelectedBrand(undefined);
+                  updateFilters('brand', undefined);
                 }}
                 className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
               >

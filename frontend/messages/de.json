@@ -4,6 +4,8 @@
     "flyers": "Prospekte",
     "offers": "Angebote",
     "retailers": "Händler",
+    "products": "Produkte",
+    "productsDescription": "Durchsuchen Sie alle verfügbaren Produkte",
     "search": "Suchen",
     "back": "Zurück",
     "showAll": "Alle anzeigen",
@@ -101,6 +103,8 @@
     "allCategories": "Alle Kategorien",
     "retailer": "Händler",
     "allRetailers": "Alle Händler",
+    "brand": "Marke",
+    "allBrands": "Alle Marken",
     "minDiscount": "Mindestrabatt (%)",
     "noMinimum": "Kein Minimum",
     "orMore": "oder mehr"

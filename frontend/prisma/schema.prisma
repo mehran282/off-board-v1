@@ -1,13 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Retailer {
@@ -18,10 +15,9 @@ model Retailer {
   scrapedAt DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  flyers Flyer[]
-  stores Store[]
-  offers Offer[]
+  flyers    Flyer[]
+  offers    Offer[]
+  stores    Store[]
 
   @@index([name])
   @@index([category])
@@ -36,13 +32,12 @@ model Flyer {
   validUntil   DateTime
   url          String   @unique
   pdfUrl       String?
-  thumbnailUrl String?
   scrapedAt    DateTime @default(now())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
-  retailer Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
-  offers   Offer[]
+  thumbnailUrl String?
+  retailer     Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+  offers       Offer[]
 
   @@index([retailerId])
   @@index([validFrom])
@@ -59,12 +54,11 @@ model Store {
   latitude     Float?
   longitude    Float?
   phone        String?
-  openingHours String? // JSON string
+  openingHours String?
   scrapedAt    DateTime @default(now())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
-  retailer Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+  retailer     Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
 
   @@unique([retailerId, address])
   @@index([retailerId])
@@ -82,8 +76,7 @@ model Product {
   scrapedAt   DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  offers Offer[]
+  offers      Offer[]
 
   @@index([name])
   @@index([brand])
@@ -109,10 +102,9 @@ model Offer {
   scrapedAt          DateTime  @default(now())
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
-
-  flyer    Flyer?   @relation(fields: [flyerId], references: [id], onDelete: SetNull)
-  product  Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-  retailer Retailer @relation(fields: [retailerId], references: [id], onDelete: Cascade)
+  flyer              Flyer?    @relation(fields: [flyerId], references: [id])
+  product            Product?  @relation(fields: [productId], references: [id])
+  retailer           Retailer  @relation(fields: [retailerId], references: [id], onDelete: Cascade)
 
   @@index([flyerId])
   @@index([productId])
@@ -125,13 +117,13 @@ model Offer {
 
 model ScrapingLog {
   id           String    @id @default(cuid())
-  type         String // 'flyers' | 'offers' | 'retailers' | 'products' | 'all'
-  status       String // 'pending' | 'running' | 'completed' | 'failed' | 'cancelled'
+  type         String
+  status       String
   startedAt    DateTime  @default(now())
   completedAt  DateTime?
   itemsScraped Int       @default(0)
-  errors       String? // JSON array of error messages
-  metadata     String? // JSON object for additional data
+  errors       String?
+  metadata     String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
