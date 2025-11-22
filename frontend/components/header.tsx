@@ -6,13 +6,12 @@ import { useState } from 'react';
 import { SearchBar } from './search-bar';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
-import { FileText, Tag, Store, Home, Menu, X, Search, Package } from 'lucide-react';
+import { FileText, Tag, Store, Home, Menu, X, Package } from 'lucide-react';
 
 export function Header() {
   const t = useTranslations('common');
   const locale = useLocale();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -106,22 +105,6 @@ export function Header() {
           )}
 
           <div className={`flex items-center gap-2 md:gap-4 ${mobileMenuOpen ? 'justify-end' : 'flex-1 justify-end'}`}>
-            {/* Mobile Search Button */}
-            {!mobileMenuOpen && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                onClick={() => {
-                  setMobileSearchOpen(!mobileSearchOpen);
-                  setMobileMenuOpen(false); // Close menu when opening search
-                }}
-                aria-label="Toggle search"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            )}
-
             {/* Desktop Search Bar */}
             <div className="flex-1 max-w-md hidden lg:block">
               <SearchBar />
@@ -140,14 +123,6 @@ export function Header() {
             </Button>
           </div>
         </div>
-
-        {/* Mobile Search Bar */}
-        {mobileSearchOpen && !mobileMenuOpen && (
-          <div className="w-full max-w-full lg:max-w-[60%] mx-auto px-4 pb-4 lg:hidden">
-            <SearchBar />
-          </div>
-        )}
-
       </div>
     </header>
   );

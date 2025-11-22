@@ -52,7 +52,7 @@ async function getRecentFlyers() {
 async function getTopOffers() {
   try {
     const offers = await prisma.offer.findMany({
-      take: 5,
+      take: 6,
       include: {
         retailer: {
           select: {
@@ -103,7 +103,7 @@ async function getTopProducts() {
 async function getTopRetailers() {
   try {
     const retailers = await prisma.retailer.findMany({
-      take: 5,
+      take: 6,
       include: {
         _count: {
           select: {
@@ -242,7 +242,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     </Button>
                   </Link>
                 </div>
-                <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                   {recentFlyers.map((flyer: {
                     id: string;
                     title: string;
@@ -426,7 +426,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     };
                     validUntil: Date | null;
                   }, index: number) => (
-                    <div key={offer.id} className={`w-full ${index >= 6 ? 'hidden sm:block' : ''}`}>
+                    <div key={offer.id} className={`w-full ${index >= 5 ? 'sm:hidden' : ''}`}>
                       <OfferCard
                         id={offer.id}
                         productName={offer.productName}
@@ -470,19 +470,31 @@ export default async function HomePage({ params }: HomePageProps) {
                       offers: number;
                       stores: number;
                     };
-                  }, index: number) => (
-                    <div key={retailer.id} className={`w-full ${index >= 6 ? 'hidden sm:block' : ''}`}>
-                      <RetailerCard
-                        id={retailer.id}
-                        name={retailer.name}
-                        category={retailer.category}
-                        logoUrl={retailer.logoUrl}
-                        flyersCount={retailer._count.flyers}
-                        offersCount={retailer._count.offers}
-                        storesCount={retailer._count.stores}
-                      />
-                    </div>
-                  ))}
+                  }, index: number) => {
+                    // موبایل: 3 کارت (index 0-2)
+                    // وب: 5 کارت (index 0-4)
+                    let className = 'w-full';
+                    if (index >= 5) {
+                      // index 5 و بالاتر: در همه جا مخفی
+                      className += ' hidden';
+                    } else if (index >= 3) {
+                      // index 3-4: در موبایل مخفی، در وب نمایش داده می‌شود
+                      className += ' hidden sm:block';
+                    }
+                    return (
+                      <div key={retailer.id} className={className}>
+                        <RetailerCard
+                          id={retailer.id}
+                          name={retailer.name}
+                          category={retailer.category}
+                          logoUrl={retailer.logoUrl}
+                          flyersCount={retailer._count.flyers}
+                          offersCount={retailer._count.offers}
+                          storesCount={retailer._count.stores}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </section>
             )}
