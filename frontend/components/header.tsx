@@ -2,16 +2,24 @@
 
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { SearchBar } from './search-bar';
 import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
-import { FileText, Tag, Store, Home, Menu, X, Package } from 'lucide-react';
+import { FileText, Tag, Store, Home, Menu, X, Package, Loader2 } from 'lucide-react';
 
 export function Header() {
   const t = useTranslations('common');
   const locale = useLocale();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loadingLink, setLoadingLink] = useState<string | null>(null);
+
+  // Reset loading state when pathname changes
+  useEffect(() => {
+    setLoadingLink(null);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -22,36 +30,61 @@ export function Header() {
             <Link
               href={`/${locale}`}
               className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+              onClick={() => setLoadingLink(`/${locale}`)}
             >
-              <Home className="h-4 w-4" />
+              {loadingLink === `/${locale}` && pathname !== `/${locale}` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Home className="h-4 w-4" />
+              )}
               {t('home')}
             </Link>
             <Link
               href={`/${locale}/flyers`}
               className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+              onClick={() => setLoadingLink(`/${locale}/flyers`)}
             >
-              <FileText className="h-4 w-4" />
+              {loadingLink === `/${locale}/flyers` && pathname !== `/${locale}/flyers` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <FileText className="h-4 w-4" />
+              )}
               {t('flyers')}
             </Link>
             <Link
               href={`/${locale}/offers`}
               className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+              onClick={() => setLoadingLink(`/${locale}/offers`)}
             >
-              <Tag className="h-4 w-4" />
+              {loadingLink === `/${locale}/offers` && pathname !== `/${locale}/offers` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Tag className="h-4 w-4" />
+              )}
               {t('offers')}
             </Link>
             <Link
               href={`/${locale}/retailers`}
               className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+              onClick={() => setLoadingLink(`/${locale}/retailers`)}
             >
-              <Store className="h-4 w-4" />
+              {loadingLink === `/${locale}/retailers` && pathname !== `/${locale}/retailers` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Store className="h-4 w-4" />
+              )}
               {t('retailers')}
             </Link>
             <Link
               href={`/${locale}/products`}
               className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+              onClick={() => setLoadingLink(`/${locale}/products`)}
             >
-              <Package className="h-4 w-4" />
+              {loadingLink === `/${locale}/products` && pathname !== `/${locale}/products` ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Package className="h-4 w-4" />
+              )}
               {t('products')}
             </Link>
           </nav>
@@ -61,8 +94,13 @@ export function Header() {
             <Link
               href={`/${locale}`}
               className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+              onClick={() => setLoadingLink(`/${locale}`)}
             >
-              <Home className="h-5 w-5" />
+              {loadingLink === `/${locale}` && pathname !== `/${locale}` ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <Home className="h-5 w-5" />
+              )}
               <span>{t('home')}</span>
             </Link>
           </div>
@@ -74,33 +112,61 @@ export function Header() {
                 <Link
                   href={`/${locale}/flyers`}
                   className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLoadingLink(`/${locale}/flyers`);
+                  }}
                 >
-                  <FileText className="h-5 w-5" />
+                  {loadingLink === `/${locale}/flyers` && pathname !== `/${locale}/flyers` ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <FileText className="h-5 w-5" />
+                  )}
                   <span>{t('flyers')}</span>
                 </Link>
                 <Link
                   href={`/${locale}/offers`}
                   className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLoadingLink(`/${locale}/offers`);
+                  }}
                 >
-                  <Tag className="h-5 w-5" />
+                  {loadingLink === `/${locale}/offers` && pathname !== `/${locale}/offers` ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Tag className="h-5 w-5" />
+                  )}
                   <span>{t('offers')}</span>
                 </Link>
                 <Link
                   href={`/${locale}/retailers`}
                   className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLoadingLink(`/${locale}/retailers`);
+                  }}
                 >
-                  <Store className="h-5 w-5" />
+                  {loadingLink === `/${locale}/retailers` && pathname !== `/${locale}/retailers` ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Store className="h-5 w-5" />
+                  )}
                   <span>{t('retailers')}</span>
                 </Link>
                 <Link
                   href={`/${locale}/products`}
                   className="text-sm font-medium transition-colors hover:text-primary flex flex-col items-center gap-1 py-2 px-2 min-w-fit"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLoadingLink(`/${locale}/products`);
+                  }}
                 >
-                  <Package className="h-5 w-5" />
+                  {loadingLink === `/${locale}/products` && pathname !== `/${locale}/products` ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Package className="h-5 w-5" />
+                  )}
                   <span>{t('products')}</span>
                 </Link>
               </nav>

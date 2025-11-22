@@ -1,5 +1,23 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "ol/ol.css";
+
+/* Shopping cart forward animation */
+@keyframes cart-forward {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-cart-forward {
+  animation: cart-forward 1s ease-in-out infinite;
+}
 
 @custom-variant dark (&:is(.dark *));
 
