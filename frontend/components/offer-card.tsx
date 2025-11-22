@@ -56,7 +56,7 @@ export function OfferCard({
   return (
     <Link href={`/${locale}/offers/${id}`}>
       <Card className="h-full w-full hover:shadow-lg transition-shadow cursor-pointer overflow-hidden !py-0">
-        <div className="relative w-full aspect-[3/2] bg-muted overflow-hidden">
+        <div className="relative w-full aspect-[3/3.12] bg-muted overflow-hidden">
             {imageUrl ? (
               <Image
                 src={imageUrl}

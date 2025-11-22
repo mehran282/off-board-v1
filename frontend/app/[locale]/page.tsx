@@ -259,19 +259,20 @@ export default async function HomePage({ params }: HomePageProps) {
                     _count: {
                       offers: number;
                     };
-                  }) => (
-                    <FlyerCard
-                      key={flyer.id}
-                      id={flyer.id}
-                      title={flyer.title}
-                      retailer={flyer.retailer}
-                      validFrom={flyer.validFrom.toISOString()}
-                      validUntil={flyer.validUntil.toISOString()}
-                      pages={flyer.pages}
-                      pdfUrl={flyer.pdfUrl}
-                      thumbnailUrl={flyer.thumbnailUrl}
-                      offersCount={flyer._count.offers}
-                    />
+                  }, index: number) => (
+                    <div key={flyer.id} className={index >= 2 ? 'hidden sm:block' : ''}>
+                      <FlyerCard
+                        id={flyer.id}
+                        title={flyer.title}
+                        retailer={flyer.retailer}
+                        validFrom={flyer.validFrom.toISOString()}
+                        validUntil={flyer.validUntil.toISOString()}
+                        pages={flyer.pages}
+                        pdfUrl={flyer.pdfUrl}
+                        thumbnailUrl={flyer.thumbnailUrl}
+                        offersCount={flyer._count.offers}
+                      />
+                    </div>
                   ))}
                 </div>
               </section>
